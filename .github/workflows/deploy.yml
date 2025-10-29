@@ -38,7 +38,8 @@ jobs:
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        # Use stable v1 which avoids indirect dependency on deprecated upload-artifact v3
+        uses: actions/upload-pages-artifact@v1
         with:
           path: dist
 
@@ -51,4 +52,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        # v1 is the stable recommended version for pages deployment
+        uses: actions/deploy-pages@v1
