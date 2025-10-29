@@ -1,4 +1,5 @@
 {
+    "homepage": "https://jdmira98.github.io/HoraIncierta/",
   "name": "butterfly-effect-storytelling",
   "version": "1.0.0",
   "description": "Interactive artistic storytelling project with butterfly effect",
@@ -7,7 +8,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "clsx": "^2.0.0",
