@@ -1,0 +1,383 @@
+{
+  "meta": {
+    "title": "Hora Incierta",
+    "subtitle": "Una experiencia audiovisual interactiva",
+    "description": "Recorrido inmersivo por seis capítulos donde cada decisión altera la atmósfera visual y sonora.",
+    "startChapterId": "chapter-1"
+  },
+  "chapters": [
+    {
+      "id": "chapter-1",
+      "order": 1,
+      "title": "Capítulo 1 – Preludio",
+      "tagline": "El túnel respira a tu ritmo",
+      "backgroundImage": "Tunel.png",
+      "textureOverlay": "Texturas.png",
+      "ambient": {
+        "mood": "subterráneo",
+        "color": "#5F72FF",
+        "audioCue": {
+          "id": "off-muerte-1",
+          "label": "Off Muerte 1.1",
+          "src": "/audio/off-muerte-1-1.mock.mp3",
+          "mock": true,
+          "description": "Voz en off que introduce el viaje hacia la oscuridad"
+        }
+      },
+      "contentBlocks": [
+        {
+          "id": "c1-frame-1",
+          "type": "narration",
+          "title": "Primer destello",
+          "body": "Respirás profundo. El túnel late y cada eco trae el peso de lo que está por suceder.",
+          "accent": "medianoche"
+        },
+        {
+          "id": "c1-frame-2",
+          "type": "audio-sequence",
+          "label": "Off Muerte 1.1 – 1.3",
+          "clips": [
+            {"id": "off-1-1", "label": "Off Muerte 1.1", "src": "/audio/off-muerte-1-1.mock.mp3", "mock": true},
+            {"id": "off-1-2", "label": "Off Muerte 1.2", "src": "/audio/off-muerte-1-2.mock.mp3", "mock": true},
+            {"id": "off-1-3", "label": "Off Muerte 1.3", "src": "/audio/off-muerte-1-3.mock.mp3", "mock": true}
+          ],
+          "description": "La voz guía se fragmenta en tres pulsos que marcan el ritmo del túnel."
+        },
+        {
+          "id": "c1-frame-3",
+          "type": "visual-transition",
+          "headline": "La primera locación emerge",
+          "body": "Un destello azul se abre entre las paredes húmedas; el túnel se transforma en el pasaje hacia la primera decisión.",
+          "icon": "Sparkles"
+        }
+      ],
+      "icons": [
+        {
+          "id": "icon-tunel",
+          "icon": "Activity",
+          "label": "Pulso del túnel",
+          "description": "Cada vibración del metal recuerda que el tiempo es un espiral.",
+          "position": {"x": 62, "y": 68},
+          "mock": true
+        }
+      ],
+      "decisions": [
+        {
+          "id": "to-chapter-2",
+          "label": "Seguir el eco",
+          "description": "El eco de la voz te arrastra hacia el siguiente tramo.",
+          "nextChapterId": "chapter-2"
+        }
+      ]
+    },
+    {
+      "id": "chapter-2",
+      "order": 2,
+      "title": "Capítulo 2 – El principio del fin",
+      "tagline": "La luz duele antes de sanar",
+      "backgroundImage": "Tunel.png",
+      "textureOverlay": "Texturas.png",
+      "ambient": {
+        "mood": "lumínico",
+        "color": "#FFC857",
+        "audioCue": {
+          "id": "off-muerte-2",
+          "label": "Off Muerte 2.1",
+          "src": "/audio/off-muerte-2-1.mock.mp3",
+          "mock": true,
+          "description": "Giro hacia la revelación"
+        }
+      },
+      "contentBlocks": [
+        {
+          "id": "c2-block-1",
+          "type": "audio-sequence",
+          "label": "Off Muerte 2.1 – 2.5",
+          "clips": [
+            {"id": "off-2-1", "label": "2.1", "src": "/audio/off-muerte-2-1.mock.mp3", "mock": true},
+            {"id": "off-2-2", "label": "2.2", "src": "/audio/off-muerte-2-2.mock.mp3", "mock": true},
+            {"id": "off-2-3", "label": "2.3", "src": "/audio/off-muerte-2-3.mock.mp3", "mock": true},
+            {"id": "off-2-4", "label": "2.4", "src": "/audio/off-muerte-2-4.mock.mp3", "mock": true},
+            {"id": "off-2-5", "label": "2.5", "src": "/audio/off-muerte-2-5.mock.mp3", "mock": true}
+          ],
+          "description": "Una serie de confesiones envuelven el túnel mientras la luz dobla la perspectiva."
+        },
+        {
+          "id": "c2-block-2",
+          "type": "icon-focus",
+          "icon": "Sun",
+          "label": "La Luz",
+          "body": "El destello abre un documental íntimo sobre los recuerdos que se desvanecen."
+        },
+        {
+          "id": "c2-block-3",
+          "type": "media",
+          "media": {
+            "kind": "video",
+            "src": "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4",
+            "poster": "Tunel.png",
+            "mock": true,
+            "caption": "Fragmentos del documental"
+          }
+        }
+      ],
+      "icons": [
+        {
+          "id": "icon-luz",
+          "icon": "Sun",
+          "label": "La Luz",
+          "description": "Ilumina la grieta y revela la siguiente capa de memoria.",
+          "position": {"x": 78, "y": 44},
+          "mock": true
+        }
+      ],
+      "decisions": [
+        {
+          "id": "to-chapter-3",
+          "label": "Atravesar el destello",
+          "description": "La luz te arrastra a un territorio incierto.",
+          "nextChapterId": "chapter-3"
+        }
+      ]
+    },
+    {
+      "id": "chapter-3",
+      "order": 3,
+      "title": "Capítulo 3 – Lugar incierto",
+      "tagline": "El desierto guarda las reliquias",
+      "backgroundImage": "Desierto.png",
+      "textureOverlay": "Texturas.png",
+      "ambient": {
+        "mood": "árido",
+        "color": "#F29E4C",
+        "audioCue": {
+          "id": "desierto-ambiente",
+          "label": "Viento cálido",
+          "src": "/audio/desierto-ambiente.mock.mp3",
+          "mock": true,
+          "description": "Soplo lejano que acompaña los íconos del desierto"
+        }
+      },
+      "contentBlocks": [
+        {
+          "id": "c3-block-1",
+          "type": "gallery",
+          "label": "Reliquias",
+          "items": [
+            {"id": "clock", "title": "Reloj", "description": "El tiempo detenido.", "icon": "Clock"},
+            {"id": "statue", "title": "Estatua", "description": "Memoria congelada en arena.", "icon": "Venus"},
+            {"id": "tile", "title": "Baldosa", "description": "Huella de un hogar perdido.", "icon": "Grid"},
+            {"id": "flower", "title": "Flor", "description": "Vida que resiste.", "icon": "Flower"
+            }
+          ]
+        },
+        {
+          "id": "c3-block-2",
+          "type": "media",
+          "media": {
+            "kind": "panorama",
+            "src": "Desierto.png",
+            "mock": true,
+            "caption": "Vista 360° del desierto interior"
+          }
+        }
+      ],
+      "icons": [
+        {
+          "id": "icon-reloj",
+          "icon": "Clock",
+          "label": "Reloj enterrado",
+          "description": "Señala que la arena congela la memoria.",
+          "position": {"x": 30, "y": 72},
+          "mock": true
+        },
+        {
+          "id": "icon-flor",
+          "icon": "Flower",
+          "label": "Flor nocturna",
+          "description": "Resplandor tímido que anuncia transformación.",
+          "position": {"x": 66, "y": 38},
+          "mock": true
+        }
+      ],
+      "decisions": [
+        {
+          "id": "to-chapter-4",
+          "label": "Seguir las huellas",
+          "description": "El desierto conduce al pasillo de puertas.",
+          "nextChapterId": "chapter-4"
+        }
+      ]
+    },
+    {
+      "id": "chapter-4",
+      "order": 4,
+      "title": "Capítulo 4 – No todas las puertas conducen al final",
+      "tagline": "Cada puerta es un eco del pasado",
+      "backgroundImage": "Pasillo.png",
+      "textureOverlay": "Texturas.png",
+      "ambient": {
+        "mood": "laberinto",
+        "color": "#9D4EDD",
+        "audioCue": {
+          "id": "radionovela",
+          "label": "Radionovela",
+          "src": "/audio/radionovela.mock.mp3",
+          "mock": true,
+          "description": "Voces superpuestas que habitan el pasillo"
+        }
+      },
+      "contentBlocks": [
+        {
+          "id": "c4-block-1",
+          "type": "interactive-doors",
+          "doors": [
+            {"id": "door-1", "label": "Memoria", "nextChapterId": "chapter-5", "icon": "DoorOpen"},
+            {"id": "door-2", "label": "Olvido", "nextChapterId": "chapter-6", "icon": "DoorClosed"}
+          ],
+          "description": "El pasillo susurra historias; cada puerta abre un paisaje emocional distinto."
+        }
+      ],
+      "icons": [
+        {
+          "id": "icon-puerta",
+          "icon": "DoorClosed",
+          "label": "Puerta en penumbra",
+          "description": "No todas conducen al final que imaginás.",
+          "position": {"x": 48, "y": 58},
+          "mock": true
+        }
+      ],
+      "decisions": [
+        {
+          "id": "to-chapter-5",
+          "label": "Abrir la puerta de la memoria",
+          "description": "Entrar al jardín que respira en penumbras.",
+          "nextChapterId": "chapter-5"
+        },
+        {
+          "id": "to-chapter-6",
+          "label": "Seguir la voz de la radionovela",
+          "description": "Dejar que el eco te lleve al túnel final.",
+          "nextChapterId": "chapter-6"
+        }
+      ]
+    },
+    {
+      "id": "chapter-5",
+      "order": 5,
+      "title": "Capítulo 5 – No busques el cielo, vivílo",
+      "tagline": "El jardín respira con vos",
+      "backgroundImage": "Jardi.png",
+      "textureOverlay": "Texturas.png",
+      "ambient": {
+        "mood": "botánico",
+        "color": "#54C6A7",
+        "audioCue": {
+          "id": "jazmin",
+          "label": "Jazmín de noche",
+          "src": "/audio/jazmin-noche.mock.mp3",
+          "mock": true,
+          "description": "Fragancia sonora que florece al anochecer"
+        }
+      },
+      "contentBlocks": [
+        {
+          "id": "c5-block-1",
+          "type": "media",
+          "media": {
+            "kind": "video",
+            "src": "https://storage.googleapis.com/coverr-main/mp4/Misty_Forest.mp4",
+            "poster": "Jardi.png",
+            "mock": true,
+            "caption": "Videoclip inmersivo"
+          }
+        },
+        {
+          "id": "c5-block-2",
+          "type": "narration",
+          "title": "El perfume del jazmín",
+          "body": "Las hojas se mueven al compás de tu respiración; el jardín te invita a habitar la noche."
+        }
+      ],
+      "icons": [
+        {
+          "id": "icon-jazmin",
+          "icon": "Leaf",
+          "label": "Jazmín de noche",
+          "description": "Fragancia que despierta recuerdos bioluminiscentes.",
+          "position": {"x": 24, "y": 36},
+          "mock": true
+        }
+      ],
+      "decisions": [
+        {
+          "id": "to-chapter-6-from-5",
+          "label": "Seguir la fragancia",
+          "description": "El perfume te lleva al túnel definitivo.",
+          "nextChapterId": "chapter-6"
+        }
+      ]
+    },
+    {
+      "id": "chapter-6",
+      "order": 6,
+      "title": "Capítulo 6 – Lo que deba ser, será",
+      "tagline": "El túnel final se abre en destellos",
+      "backgroundImage": "TunelFinal.png",
+      "textureOverlay": "Texturas.png",
+      "ambient": {
+        "mood": "epílogo",
+        "color": "#6C63FF",
+        "audioCue": {
+          "id": "videopodcast",
+          "label": "Videopodcast",
+          "src": "/audio/videopodcast.mock.mp3",
+          "mock": true,
+          "description": "Testimonios finales"
+        }
+      },
+      "contentBlocks": [
+        {
+          "id": "c6-block-1",
+          "type": "narration",
+          "title": "La luz al final",
+          "body": "El túnel se rompe en partículas; la luz y la sombra conviven en un mismo destello."
+        },
+        {
+          "id": "c6-block-2",
+          "type": "media",
+          "media": {
+            "kind": "video",
+            "src": "https://storage.googleapis.com/coverr-main/mp4/Footboys.mp4",
+            "poster": "TunelFinal.png",
+            "mock": true,
+            "caption": "Videopodcast final"
+          }
+        },
+        {
+          "id": "c6-block-3",
+          "type": "credits",
+          "label": "Detrás de cámaras",
+          "items": [
+            "Dirección artística: Nombre Artista",
+            "Diseño sonoro: Equipo Sonoro",
+            "Producción ejecutiva: Producción X",
+            "Agradecimientos: Comunidad"
+          ]
+        }
+      ],
+      "icons": [
+        {
+          "id": "icon-luz-final",
+          "icon": "Sparkles",
+          "label": "Destello final",
+          "description": "Marca el cierre y la apertura de una nueva memoria.",
+          "position": {"x": 52, "y": 30},
+          "mock": true
+        }
+      ],
+      "decisions": []
+    }
+  ]
+}
