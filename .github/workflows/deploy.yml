@@ -37,20 +37,26 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: npm run build
 
-      - name: Upload artifact
-        # Use stable v1 which avoids indirect dependency on deprecated upload-artifact v3
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: dist
+      - name: Archive build (for debugging)
+        run: ls -la dist || true
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        # v1 is the stable recommended version for pages deployment
-        uses: actions/deploy-pages@v1
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node (for npm cache consistency)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          # keep empty commit disabled to avoid noise
+          keep_files: false
