@@ -1,0 +1,67 @@
+{
+    // VS Code launch configuration for debugging the Vite + React app.
+    // This configuration launches Chrome against the local dev server
+    // and ensures that only your source files under `src/` are stepped into.
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome (Vite) - Debug Source Only",
+            // Update this if your dev server runs on a different port
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "userDataDir": "${workspaceFolder}/.vscode/chrome",
+            // Prevent stepping into node internals, bundles, chunks and libraries
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**",
+                "${workspaceFolder}/dist/**",
+                "<node_internals>/**",
+                "webpack:///*",
+                "webpack:///./~/*",
+                "webpack:///./node_modules/*",
+                "**/*.chunk.js",
+                "**/vendor/**",
+                "**/runtime~*",
+                "**/node_modules/**"
+            ],
+            // Map source paths from sourcemaps to local files so breakpoints resolve
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${workspaceFolder}/src/*",
+                "webpack:///./src/*": "${workspaceFolder}/src/*",
+                "webpack:///*": "${workspaceFolder}/*",
+                "/src/*": "${workspaceFolder}/src/*",
+                "vite:///*": "${workspaceFolder}/*",
+                "*": "${workspaceFolder}/*"
+            },
+            // Only set breakpoints in the workspace (prevents accidental library breakpoints)
+            "internalConsoleOptions": "neverOpen",
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**",
+                "!**/dist/**"
+            ]
+        },
+
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Attach to Chrome",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}",
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**",
+                "<node_internals>/**",
+                "**/*.chunk.js",
+                "**/vendor/**"
+            ],
+            "sourceMapPathOverrides": {
+                "webpack:///src/*": "${workspaceFolder}/src/*",
+                "webpack:///./src/*": "${workspaceFolder}/src/*",
+                "/src/*": "${workspaceFolder}/src/*",
+                "vite:///*": "${workspaceFolder}/*",
+                "*": "${workspaceFolder}/*"
+            }
+        }
+    ]
+}
