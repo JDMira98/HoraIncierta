@@ -80,12 +80,14 @@
   
   .scene-container {
     position: relative;
-    min-height: 100vh;
+    /* Respect safe area on mobile devices and avoid content being cut off */
+    min-height: calc(100vh - env(safe-area-inset-bottom));
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 2rem 1rem;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
   }
   
   .text-glow {
@@ -108,7 +110,23 @@
   @media (max-width: 480px) {
     .scene-container {
       padding: 0.5rem 0.25rem;
+      padding-bottom: calc(env(safe-area-inset-bottom) + 1rem);
     }
+  }
+
+  /* Helpers for components to keep controls above device safe area */
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1rem) !important;
+  }
+
+  .footer-safe {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1.25rem) !important;
+  }
+
+  .video-overlay-full {
+    width: 100%;
+    height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    max-height: 100vh;
   }
 
   /* Accessibility improvements */

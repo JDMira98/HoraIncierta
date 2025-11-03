@@ -47,13 +47,13 @@
             {
               "id": "preludio-1-a",
               "label": "¿Dónde estoy?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "preludio-2"
             },
             {
               "id": "preludio-1-b",
               "label": "¿Quién sos?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "preludio-2"
             }
           ],
@@ -82,13 +82,13 @@
             {
               "id": "preludio-2-a",
               "label": "Escucho gotas de agua",
-              "video360": true,
+              "video360": false,
               "nextStepId": "preludio-3"
             },
             {
               "id": "preludio-2-b",
               "label": "Escucho el viento resoplar",
-              "video360": true,
+              "video360": false,
               "nextStepId": "preludio-3"
             }
           ],
@@ -156,13 +156,13 @@
             {
               "id": "principio-1-a",
               "label": "¿Dónde estoy?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-2"
             },
             {
               "id": "principio-1-b",
               "label": "¿Morí?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-2"
             }
           ],
@@ -191,13 +191,13 @@
             {
               "id": "principio-2-a",
               "label": "¿Cita?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-3"
             },
             {
               "id": "principio-2-b",
               "label": "¿Nos conocemos?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-3"
             }
           ],
@@ -210,7 +210,7 @@
           "id": "principio-3",
           "sequence": "2.2",
           "speaker": "Muerte",
-          "text": "Es muy loco, ¿no? Todos piensan que están soñando… No corras. No hay prisa. Nadie llega tarde al final.",
+          "text": "Es muy loco ¿No? todos piensan que están soñando, es muy curioso, todos tienen cita conmigo, yo conozco a todos; y vos, vos llegas temprano, de hecho, shhh escucha, todavía están gritando tu nombre. Pero bueno, ya que estás aquí, qué más se le va a hacer, permíteme darte la bienvenida a este viaje, aquí nadie camina recto, porque nada es igual, cada paso que das aquí suena distinto, ¿lo sientes? eso es porque ya no hay suelo; sólo un favor, No corras. No hay prisa. Nadie llega tarde al final. Presta mucha atención a tu alrededor, hay respuestas, pero también preguntas, solamente abrí tus ojos.",
           "background": {
             "src": "cuevadondo.mp4",
             "animation": "zoomOut"
@@ -224,22 +224,17 @@
           },
           "media": {
             "type": "documental",
-            "video360": true
-          },
-          "choices": [
-            {
-              "id": "principio-3-a",
-              "label": "Tengo frío",
-              "video360": true,
-              "nextStepId": "principio-4"
+            "video360": {
+              "type": "youtube",
+              "id": "qcPkmctTGLA",
+              "title": "Documental · Hora Incierta"
             },
-            {
-              "id": "principio-3-b",
-              "label": "Tengo miedo",
-              "video360": true,
-              "nextStepId": "principio-4"
-            }
-          ],
+            "autoLaunch": true,
+            "seconds": 3,
+            "label": "Documental",
+            "continueLabel": "Continuar",
+            "nextStepId": "principio-4"
+          },
           "skip": {
             "label": "Omitir",
             "nextStepId": "principio-4"
@@ -265,13 +260,13 @@
             {
               "id": "principio-4-a",
               "label": "¿A qué te refieres?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-5"
             },
             {
               "id": "principio-4-b",
               "label": "¿No estás solo?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-5"
             }
           ],
@@ -300,13 +295,13 @@
             {
               "id": "principio-5-a",
               "label": "¿A dónde quieres ir ahora?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-6"
             },
             {
               "id": "principio-5-b",
               "label": "Mirar atrás",
-              "video360": true,
+              "video360": false,
               "nextStepId": "principio-6"
             }
           ],
@@ -335,13 +330,13 @@
             {
               "id": "principio-6-a",
               "label": "A donde las huellas desaparecen",
-              "video360": true,
+              "video360": false,
               "nextStepId": "desierto-1"
             },
             {
               "id": "principio-6-b",
               "label": "Donde las promesas rotas se vuelven arena",
-              "video360": true,
+              "video360": false,
               "nextStepId": "desierto-1"
             }
           ],
@@ -380,13 +375,13 @@
             {
               "id": "desierto-1-a",
               "label": "¿Por qué estoy aquí?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "desierto-2"
             },
             {
               "id": "desierto-1-b",
               "label": "¿Para qué me muestras todo esto?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "desierto-2"
             }
           ],
@@ -413,19 +408,19 @@
           },
           "media": {
             "type": "panorama",
-            "video360": true
+            "video360": false
           },
           "choices": [
             {
               "id": "desierto-2-a",
               "label": "Seguir observando",
-              "video360": true,
+              "video360": false,
               "nextStepId": "desierto-3"
             },
             {
               "id": "desierto-2-b",
               "label": "Cerrar los ojos",
-              "video360": true,
+              "video360": false,
               "nextStepId": "desierto-3"
             }
           ],
@@ -454,13 +449,13 @@
             {
               "id": "desierto-3-a",
               "label": "A donde el aire huele a despedida",
-              "video360": true,
+              "video360": false,
               "nextStepId": "pasillo-1"
             },
             {
               "id": "desierto-3-b",
               "label": "A donde caminar este pasillo es volver a rozar todo lo que amaste",
-              "video360": true,
+              "video360": false,
               "nextStepId": "pasillo-1"
             }
           ],
@@ -497,19 +492,19 @@
           },
           "media": {
             "type": "radionovela",
-            "video360": true
+            "video360": false
           },
           "choices": [
             {
               "id": "pasillo-1-a",
               "label": "Escuchar la puerta izquierda",
-              "video360": true,
+              "video360": false,
               "nextStepId": "pasillo-2"
             },
             {
               "id": "pasillo-1-b",
               "label": "Escuchar la puerta derecha",
-              "video360": true,
+              "video360": false,
               "nextStepId": "pasillo-2"
             }
           ],
@@ -538,13 +533,13 @@
             {
               "id": "pasillo-2-a",
               "label": "A donde el rocío no necesitaba ser eterno",
-              "video360": true,
+              "video360": false,
               "nextStepId": "jardin-1"
             },
             {
               "id": "pasillo-2-b",
               "label": "A donde el sol no te juzgaba",
-              "video360": true,
+              "video360": false,
               "nextStepId": "jardin-1"
             }
           ],
@@ -575,19 +570,19 @@
           "audio": null,
           "media": {
             "type": "videoclip",
-            "video360": true
+            "video360": false
           },
           "choices": [
             {
               "id": "jardin-1-a",
               "label": "Escuchar el jazmín",
-              "video360": true,
+              "video360": false,
               "nextStepId": "tunel-1"
             },
             {
               "id": "jardin-1-b",
               "label": "Seguir sin mirar atrás",
-              "video360": true,
+              "video360": false,
               "nextStepId": "tunel-1"
             }
           ],
@@ -626,13 +621,13 @@
             {
               "id": "tunel-1-a",
               "label": "¿Qué pasará cuando cruce esa luz?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "tunel-2"
             },
             {
               "id": "tunel-1-b",
               "label": "¿Qué sigue ahora?",
-              "video360": true,
+              "video360": false,
               "nextStepId": "tunel-2"
             }
           ],
@@ -659,19 +654,19 @@
           },
           "media": {
             "type": "videopodcast",
-            "video360": true
+            "video360": false
           },
           "choices": [
             {
               "id": "tunel-2-a",
               "label": "Escuchar las voces",
-              "video360": true,
+              "video360": false,
               "nextStepId": "tunel-3"
             },
             {
               "id": "tunel-2-b",
               "label": "Cerrar los ojos y sentir",
-              "video360": true,
+              "video360": false,
               "nextStepId": "tunel-3"
             }
           ],

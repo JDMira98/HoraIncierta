@@ -34,21 +34,44 @@ const choiceVariants = {
 
 const FONDOS_BASE_PATH = '/Elementos Web/fondos/';
 
-const resolveAssetPath = (rawPath) => {
+const resolveAssetPath = (rawPath, { fallbackDir } = {}) => {
   if (!rawPath) {
     return null;
   }
 
-  if (/^https?:\/\//i.test(rawPath) || rawPath.startsWith('/')) {
-    return rawPath;
+  const trimmedPath = rawPath.trim();
+
+  if (/^https?:\/\//i.test(trimmedPath) || trimmedPath.startsWith('data:') || trimmedPath.startsWith('blob:')) {
+    return trimmedPath;
   }
 
-  return `${FONDOS_BASE_PATH}${rawPath}`;
+  let normalizedPath = trimmedPath;
+
+  if (
+    fallbackDir
+    && !normalizedPath.startsWith('/')
+    && !normalizedPath.startsWith('./')
+    && !normalizedPath.startsWith('../')
+    && !normalizedPath.includes('/')
+  ) {
+    const normalizedFallback = fallbackDir.endsWith('/') ? fallbackDir : `${fallbackDir}/`;
+    normalizedPath = `${normalizedFallback}${normalizedPath}`;
+  }
+
+  if (!normalizedPath.startsWith('/')) {
+    normalizedPath = `/${normalizedPath}`;
+  }
+
+  const baseUrl = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+  const sanitizedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const encodedPath = encodeURI(normalizedPath);
+
+  return `${sanitizedBase}${encodedPath}` || encodedPath;
 };
 
 const resolveBackgroundMedia = (background = {}) => {
   const candidate = background.src ?? background.asset ?? background.image ?? null;
-  const src = resolveAssetPath(candidate);
+  const src = resolveAssetPath(candidate, { fallbackDir: FONDOS_BASE_PATH });
 
   if (!src) {
     return null;
@@ -62,7 +85,9 @@ const resolveBackgroundMedia = (background = {}) => {
       src,
       loop: background.loop ?? true,
       muted: background.muted ?? true,
-      poster: resolveAssetPath(background.poster ?? background.thumbnail ?? null),
+      poster: resolveAssetPath(background.poster ?? background.thumbnail ?? null, {
+        fallbackDir: FONDOS_BASE_PATH,
+      }),
     };
   }
 
@@ -88,16 +113,54 @@ const buildStepIndex = (chapters) => {
   return { map, order, chapterByStep };
 };
 
-const resolveVideoConfig = (choice, settings) => {
-  if (!choice?.video360) {
+const resolveVideoConfig = (source, settings) => {
+  if (!source) {
     return null;
   }
 
-  if (typeof choice.video360 === 'object' && choice.video360 !== null) {
-    return choice.video360;
+  if (source.provider && settings?.videoProvider?.[source.provider]) {
+    return settings.videoProvider[source.provider];
   }
 
-  return settings?.videoProvider?.default ?? null;
+  const candidate = source.video360 ?? source.video ?? source.videoConfig;
+
+  if (typeof candidate === 'object' && candidate !== null) {
+    return candidate;
+  }
+
+  if (typeof candidate === 'string' && settings?.videoProvider?.[candidate]) {
+    return settings.videoProvider[candidate];
+  }
+
+  if (candidate === true) {
+    return settings?.videoProvider?.default ?? null;
+  }
+
+  if (source.id && source.type) {
+    return {
+      type: source.type,
+      id: source.id,
+      title: source.title,
+      autoplay: source.autoplay,
+      muted: source.muted,
+      controls: source.controls,
+      params: source.params,
+    };
+  }
+
+  if (source.src) {
+    return {
+      type: source.type ?? 'url',
+      src: source.src,
+      title: source.title,
+      autoplay: source.autoplay,
+      muted: source.muted,
+      controls: source.controls,
+      params: source.params,
+    };
+  }
+
+  return null;
 };
 
 const ButterflyFlow = () => {
@@ -119,6 +182,8 @@ const ButterflyFlow = () => {
   const [choiceTimeLeft, setChoiceTimeLeft] = useState(null);
   const audioRef = useRef(null);
   const choiceTimerRef = useRef(null);
+  const hasTriggeredAutoMediaRef = useRef(false);
+  const autoLaunchTimerRef = useRef(null);
 
   const clearChoiceTimer = useCallback(() => {
     if (choiceTimerRef.current) {
@@ -126,6 +191,13 @@ const ButterflyFlow = () => {
       choiceTimerRef.current = null;
     }
     setChoiceTimeLeft(null);
+  }, []);
+
+  const clearAutoLaunchTimer = useCallback(() => {
+    if (autoLaunchTimerRef.current) {
+      clearTimeout(autoLaunchTimerRef.current);
+      autoLaunchTimerRef.current = null;
+    }
   }, []);
 
   const currentStep = currentStepId ? stepMap.get(currentStepId) : null;
@@ -162,7 +234,14 @@ const ButterflyFlow = () => {
     }
 
     setAudioComplete(false);
-    const audio = new Audio(currentStep.audio.src);
+    const audioSrc = resolveAssetPath(currentStep.audio.src);
+
+    if (!audioSrc) {
+      setAudioComplete(true);
+      return;
+    }
+
+    const audio = new Audio(audioSrc);
     audio.volume = currentStep.audio.volume ?? 1;
     audio.loop = currentStep.audio.loop ?? false;
 
@@ -243,10 +322,107 @@ const ButterflyFlow = () => {
   useEffect(() => {
     setVideoOverlay(null);
     setActiveChoice(null);
-  }, [currentStepId]);
+    hasTriggeredAutoMediaRef.current = false;
+    clearAutoLaunchTimer();
+  }, [clearAutoLaunchTimer, currentStepId]);
+
+  useEffect(() => {
+    if (!currentStep) {
+      clearAutoLaunchTimer();
+      hasTriggeredAutoMediaRef.current = false;
+      return undefined;
+    }
+
+    const mediaConfig = currentStep.media;
+
+    if (!mediaConfig?.autoLaunch) {
+      clearAutoLaunchTimer();
+      hasTriggeredAutoMediaRef.current = false;
+      return undefined;
+    }
+
+    if (!textComplete || !audioComplete) {
+      clearAutoLaunchTimer();
+      hasTriggeredAutoMediaRef.current = false;
+      return undefined;
+    }
+
+    if (videoOverlay) {
+      clearAutoLaunchTimer();
+      return undefined;
+    }
+
+    if (hasTriggeredAutoMediaRef.current) {
+      return undefined;
+    }
+
+    const resolvedVideo = resolveVideoConfig(mediaConfig, settings);
+
+    if (!resolvedVideo) {
+      return undefined;
+    }
+
+    const hasValidMedia = Boolean(
+      (resolvedVideo.type === 'youtube' && resolvedVideo.id)
+      || resolvedVideo.src
+    );
+
+    if (!hasValidMedia) {
+      return undefined;
+    }
+
+    const triggerOverlay = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+
+      clearChoiceTimer();
+      setActiveChoice(null);
+      setVideoOverlay({
+        ...resolvedVideo,
+        label: mediaConfig.label ?? resolvedVideo.label ?? resolvedVideo.title ?? 'Recurso',
+        continueLabel: mediaConfig.continueLabel ?? 'Continuar',
+        nextStepId: mediaConfig.nextStepId ?? currentStep.skip?.nextStepId ?? null,
+        origin: 'step',
+        autoplay: mediaConfig.autoplay ?? resolvedVideo.autoplay ?? true,
+        muted: mediaConfig.muted ?? resolvedVideo.muted,
+        controls: mediaConfig.controls ?? resolvedVideo.controls,
+        params: mediaConfig.params ?? resolvedVideo.params,
+      });
+    };
+
+    const delaySeconds = Number(mediaConfig.seconds ?? mediaConfig.delaySeconds ?? 0);
+    const delayMs = Number.isFinite(delaySeconds) && delaySeconds > 0 ? delaySeconds * 1000 : 0;
+
+    hasTriggeredAutoMediaRef.current = true;
+
+    if (delayMs > 0) {
+      if (typeof window === 'undefined') {
+        triggerOverlay();
+        return () => {
+          clearAutoLaunchTimer();
+        };
+      }
+
+      autoLaunchTimerRef.current = window.setTimeout(() => {
+        autoLaunchTimerRef.current = null;
+        triggerOverlay();
+      }, delayMs);
+
+      return () => {
+        clearAutoLaunchTimer();
+      };
+    }
+
+    triggerOverlay();
+    return () => {
+      clearAutoLaunchTimer();
+    };
+  }, [audioComplete, clearAutoLaunchTimer, clearChoiceTimer, currentStep, settings, textComplete, videoOverlay]);
 
   const goToStep = useCallback((nextStepId) => {
     clearChoiceTimer();
+    clearAutoLaunchTimer();
 
     if (!nextStepId) {
       return;
@@ -270,7 +446,7 @@ const ButterflyFlow = () => {
 
     setIsEpilogue(false);
     setCurrentStepId(nextStepId);
-  }, [clearChoiceTimer, epilogue, stepMap]);
+  }, [clearAutoLaunchTimer, clearChoiceTimer, epilogue, stepMap]);
 
   const handleChoice = useCallback((choice) => {
     if (!choice) {
@@ -278,6 +454,7 @@ const ButterflyFlow = () => {
     }
 
     clearChoiceTimer();
+    clearAutoLaunchTimer();
 
     const videoConfig = resolveVideoConfig(choice, settings);
 
@@ -287,16 +464,32 @@ const ButterflyFlow = () => {
 
     if (videoConfig) {
       setActiveChoice(choice);
+      const hasValidMedia = Boolean(
+        (videoConfig.type === 'youtube' && videoConfig.id)
+        || videoConfig.src
+      );
+
+      if (!hasValidMedia) {
+        goToStep(choice.nextStepId);
+        return;
+      }
+
       setVideoOverlay({
         ...videoConfig,
         nextStepId: choice.nextStepId,
         label: choice.label,
+        continueLabel: choice.continueLabel ?? 'Continuar',
+        origin: 'choice',
+        autoplay: choice.autoplay ?? videoConfig.autoplay,
+        muted: choice.muted ?? videoConfig.muted,
+        controls: choice.controls ?? videoConfig.controls,
+        params: choice.params ?? videoConfig.params,
       });
       return;
     }
 
     goToStep(choice.nextStepId);
-  }, [clearChoiceTimer, goToStep, settings]);
+  }, [clearAutoLaunchTimer, clearChoiceTimer, goToStep, settings]);
 
   useEffect(() => {
     clearChoiceTimer();
@@ -306,7 +499,7 @@ const ButterflyFlow = () => {
       return;
     }
 
-    const timeoutMs = currentStep.choiceTimerMs ?? settings?.choiceTimerMs ?? 7000;
+    const timeoutMs = currentStep.choiceTimerMs ?? settings?.choiceTimerMs ?? 15000;
     const startedAt = performance.now();
     setChoiceTimeLeft(timeoutMs);
 
@@ -389,11 +582,14 @@ const ButterflyFlow = () => {
   const hasBackgroundImage = backgroundMedia?.type === 'image';
   const hasBackgroundVideo = backgroundMedia?.type === 'video';
   const chapterTitle = currentChapter?.title ?? meta?.title ?? 'Hora Incierta';
-  const choiceTimeoutMs = currentStep?.choiceTimerMs ?? settings?.choiceTimerMs ?? 7000;
+  const choiceTimeoutMs = currentStep?.choiceTimerMs ?? settings?.choiceTimerMs ?? 15000;
   const choiceCountdownSeconds = choiceTimeLeft !== null ? Math.ceil(choiceTimeLeft / 1000) : null;
   const choiceProgress = choiceTimeLeft !== null && choiceTimeoutMs > 0
     ? Math.max(choiceTimeLeft / choiceTimeoutMs, 0)
     : null;
+  const hasChoices = Boolean(currentStep?.choices?.length);
+  const isSkipVisible = Boolean(currentStep?.skip) && !hasChoices;
+  const showCountdown = hasChoices && choiceCountdownSeconds !== null;
   const audioButtonClasses = isAudioEnabled
     ? 'border-white/60 bg-white/15 text-white'
     : 'border-white/20 bg-white/5 text-white/60';
@@ -416,6 +612,53 @@ const ButterflyFlow = () => {
       : audioBlocked
         ? 'text-red-400'
         : 'text-white/50';
+  const overlayAutoplay = videoOverlay?.autoplay !== false;
+  const overlayShouldMute = videoOverlay?.muted ?? false;
+  const overlayControls = videoOverlay?.controls ?? true;
+  const overlayEmbedSrc = useMemo(() => {
+    if (!videoOverlay) {
+      return null;
+    }
+
+    if (videoOverlay.type === 'youtube' && videoOverlay.id) {
+      const params = new URLSearchParams({
+        enablejsapi: '1',
+        rel: '0',
+        playsinline: '1',
+      });
+
+      if (overlayAutoplay) {
+        params.set('autoplay', '1');
+        if (overlayShouldMute) {
+          params.set('mute', '1');
+        }
+      }
+
+      if (!overlayControls) {
+        params.set('controls', '0');
+      }
+
+      if (typeof videoOverlay.start === 'number') {
+        params.set('start', String(videoOverlay.start));
+      }
+
+      if (videoOverlay.params && typeof videoOverlay.params === 'object') {
+        Object.entries(videoOverlay.params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            params.set(key, String(value));
+          }
+        });
+      }
+
+      return `https://www.youtube.com/embed/${videoOverlay.id}?${params.toString()}`;
+    }
+
+    if (videoOverlay.src) {
+      return videoOverlay.src;
+    }
+
+    return null;
+  }, [overlayAutoplay, overlayControls, overlayShouldMute, videoOverlay]);
 
   if (isEpilogue && epilogue) {
     return (
@@ -498,18 +741,18 @@ const ButterflyFlow = () => {
         transition={{ duration: 1.2, ease: 'easeOut' }}
       />
 
-      <div className="relative z-20 flex h-full w-full flex-col px-6 py-8 md:px-12">
-        <header className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.4em] text-white/50">{chapterTitle}</p>
+      <div className="relative z-20 flex h-full w-full flex-col px-4 py-6 sm:px-6 md:px-12 md:py-8">
+        <header className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-6">
+          <div className="space-y-1 text-left">
+            <p className="text-[9px] uppercase tracking-[0.35em] text-white/60 sm:text-[10px]">{chapterTitle}</p>
             {currentStep?.sequence && (
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30">
+              <p className="text-[9px] uppercase tracking-[0.35em] text-white/40 sm:text-[10px]">
                 Secuencia {currentStep.sequence}
               </p>
             )}
           </div>
-          <div className="flex items-start gap-4">
-            <div className="flex flex-col items-end gap-2">
+          <div className="flex flex-col gap-2 self-end text-right md:flex-row md:items-start md:gap-4 md:self-auto">
+            <div className="flex flex-col items-end gap-2 md:items-end">
               <motion.button
                 type="button"
                 className={`rounded-full border px-3 py-3 transition-colors duration-200 ${audioButtonClasses}`}
@@ -544,7 +787,7 @@ const ButterflyFlow = () => {
               )}
             </div>
             {totalSteps > 0 && currentIndex >= 0 && (
-              <div className="text-right text-[10px] uppercase tracking-[0.3em] text-white/50">
+              <div className="text-right text-[9px] uppercase tracking-[0.3em] text-white/50 sm:text-[10px]">
                 {currentIndex + 1} / {totalSteps}
               </div>
             )}
@@ -554,23 +797,40 @@ const ButterflyFlow = () => {
         <main className="flex flex-1 flex-col justify-center gap-6">
           <motion.div variants={textVariants} initial="initial" animate="animate" exit="exit">
             {currentStep?.speaker && (
-              <span className="mb-3 inline-block text-xs uppercase tracking-[0.4em] text-white/50">
+              <span className="mb-3 inline-block text-[11px] uppercase tracking-[0.35em] text-white/55 sm:text-xs">
                 {currentStep.speaker}
               </span>
             )}
-            <p className="text-left text-lg leading-relaxed text-white md:text-2xl">
+            <p className="text-left text-base leading-relaxed text-white sm:text-lg md:text-2xl">
               {typedText}
               {!textComplete && <span className="ml-1 animate-pulse">▮</span>}
             </p>
           </motion.div>
         </main>
 
-        <footer className="mt-4 flex flex-col items-center gap-4">
+        <footer className="mt-6 flex w-full flex-col items-center gap-5 footer-safe pointer-events-auto z-20 px-2">
+          {showCountdown && (
+            <div className="flex w-full max-w-sm flex-col items-center gap-2 rounded-3xl bg-white/6 px-4 py-3 text-center backdrop-blur-sm">
+              <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/15">
+                <motion.div
+                  className="h-full"
+                  style={{ backgroundColor: accentColor, transformOrigin: 'left' }}
+                  animate={{ scaleX: choiceProgress ?? 1 }}
+                  initial={{ scaleX: 1 }}
+                  transition={{ duration: 0.2, ease: 'linear' }}
+                />
+              </div>
+              <span className="text-[9px] uppercase tracking-[0.35em] text-white/70">
+                Selección automática en {choiceCountdownSeconds}s
+              </span>
+            </div>
+          )}
+
           <AnimatePresence>
             {canRevealChoices && (
               <motion.div
                 key={`choices-${currentStep.id}`}
-                className="flex w-full flex-col items-center justify-center gap-3 md:flex-row"
+                className="flex w-full flex-col items-center justify-center gap-3 sm:gap-4 md:flex-row"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 16 }}
@@ -582,7 +842,7 @@ const ButterflyFlow = () => {
                     variants={choiceVariants}
                     initial="hidden"
                     animate="visible"
-                    className="w-full max-w-xs rounded-full border bg-white/10 px-6 py-3 text-xs uppercase tracking-[0.35em] text-white transition hover:bg-white/20"
+                    className="w-full max-w-sm rounded-full border-2 border-white/25 bg-white/5 px-6 py-3 sm:py-4 text-sm uppercase tracking-[0.3em] text-white/90 transition hover:border-white/60 hover:bg-white/15 touch-manipulation"
                     whileHover={{ scale: 1.04 }}
                     whileTap={{ scale: 0.96 }}
                     style={{ borderColor: accentColor ?? '#ffffff' }}
@@ -595,10 +855,10 @@ const ButterflyFlow = () => {
             )}
           </AnimatePresence>
 
-          {currentStep?.skip && (
+          {isSkipVisible && (
             <motion.button
               type="button"
-              className="text-[10px] uppercase tracking-[0.3em] text-white/40 transition hover:text-white/70"
+              className="w-full max-w-[220px] rounded-full border border-white/25 bg-transparent px-4 py-2.5 text-[10px] uppercase tracking-[0.3em] text-white/65 transition hover:border-white/50 hover:text-white"
               onClick={handleSkip}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -610,26 +870,26 @@ const ButterflyFlow = () => {
       </div>
 
       <AnimatePresence>
-        {videoOverlay && (
+        {videoOverlay && overlayEmbedSrc && (
           <motion.div
             key="video-overlay"
-            className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 px-4"
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black/90 px-3 sm:px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-white/15 bg-black">
-              <div className="relative w-full pb-[56.25%]">
+              <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-white/15 bg-black video-overlay-full">
+                <div className="absolute inset-0">
                 <iframe
                   title={videoOverlay.title ?? 'Video 360°'}
-                  src={`https://www.youtube.com/embed/${videoOverlay.id}?enablejsapi=1&rel=0&playsinline=1`}
+                  src={overlayEmbedSrc}
                   className="absolute inset-0 h-full w-full"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
                 />
               </div>
-              <div className="flex items-center justify-between gap-2 border-t border-white/10 px-4 py-3 text-xs uppercase tracking-[0.3em] text-white/60">
-                <span>{activeChoice?.label}</span>
+                <div className="absolute left-0 right-0 bottom-0 flex items-center justify-between gap-2 border-t border-white/10 bg-black/40 px-4 py-3 text-[11px] uppercase tracking-[0.25em] text-white/70 sm:text-xs">
+                  <span className="truncate pr-2">{videoOverlay.label ?? activeChoice?.label ?? videoOverlay.title ?? ''}</span>
                 <button
                   type="button"
                   className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-white transition hover:border-white/60 hover:bg-white/20"
@@ -638,10 +898,13 @@ const ButterflyFlow = () => {
                     setVideoOverlay(null);
                     setActiveChoice(null);
                     setAudioComplete(true);
-                    goToStep(next);
+                    clearAutoLaunchTimer();
+                    if (next) {
+                      goToStep(next);
+                    }
                   }}
                 >
-                  Continuar
+                  {videoOverlay.continueLabel ?? 'Continuar'}
                 </button>
               </div>
             </div>
@@ -649,30 +912,7 @@ const ButterflyFlow = () => {
         )}
       </AnimatePresence>
 
-      {choiceCountdownSeconds !== null && (
-        <motion.div
-          key="choice-timer-overlay"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-30 px-6 pb-8 md:px-12"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-        >
-          <div className="flex w-full flex-col gap-2">
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/15">
-              <motion.div
-                className="h-full"
-                style={{ backgroundColor: accentColor, transformOrigin: 'left' }}
-                animate={{ scaleX: choiceProgress ?? 1 }}
-                initial={{ scaleX: 1 }}
-                transition={{ duration: 0.2, ease: 'linear' }}
-              />
-            </div>
-            <span className="text-[9px] uppercase tracking-[0.35em] text-white/60">
-              Selección automática en {choiceCountdownSeconds}s
-            </span>
-          </div>
-        </motion.div>
-      )}
+      {/* Countdown moved inside footer to avoid overlap */}
     </div>
   );
 };
