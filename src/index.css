@@ -10,11 +10,17 @@
     box-sizing: border-box;
   }
   
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   body {
     background-color: #000000;
     color: #ffffff;
     font-family: 'Inter', system-ui, sans-serif;
-    overflow-x: hidden;
+    overflow: hidden;
     line-height: 1.6;
   }
   

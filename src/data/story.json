@@ -1,383 +1,732 @@
 {
   "meta": {
     "title": "Hora Incierta",
-    "subtitle": "Una experiencia audiovisual interactiva",
-    "description": "Recorrido inmersivo por seis capítulos donde cada decisión altera la atmósfera visual y sonora.",
-    "startChapterId": "chapter-1"
+    "subtitle": "Experiencia audiovisual interactiva",
+    "startStepId": "preludio-1",
+    "description": "Recorrido inmersivo que replica el guion completo sin desplazamiento, utilizando animaciones graduales y recursos mockeados."
+  },
+  "settings": {
+    "videoProvider": {
+      "default": {
+        "type": "youtube",
+        "id": "qcPkmctTGLA",
+        "title": "Experiencia 360°"
+      }
+    },
+    "typewriter": {
+      "defaultSpeed": 28,
+      "endDelay": 600
+    }
   },
   "chapters": [
     {
-      "id": "chapter-1",
-      "order": 1,
-      "title": "Capítulo 1 – Preludio",
-      "tagline": "El túnel respira a tu ritmo",
-      "backgroundImage": "Tunel.png",
-      "textureOverlay": "Texturas.png",
-      "ambient": {
-        "mood": "subterráneo",
-        "color": "#5F72FF",
-        "audioCue": {
-          "id": "off-muerte-1",
-          "label": "Off Muerte 1.1",
-          "src": "/audio/off-muerte-1-1.mock.mp3",
-          "mock": true,
-          "description": "Voz en off que introduce el viaje hacia la oscuridad"
-        }
+      "id": "capitulo-1",
+      "title": "Capítulo I · Preludio",
+      "theme": {
+        "accent": "#5F72FF",
+        "backgroundColor": "#05030A"
       },
-      "contentBlocks": [
+      "steps": [
         {
-          "id": "c1-frame-1",
-          "type": "narration",
-          "title": "Primer destello",
-          "body": "Respirás profundo. El túnel late y cada eco trae el peso de lo que está por suceder.",
-          "accent": "medianoche"
-        },
-        {
-          "id": "c1-frame-2",
-          "type": "audio-sequence",
-          "label": "Off Muerte 1.1 – 1.3",
-          "clips": [
-            {"id": "off-1-1", "label": "Off Muerte 1.1", "src": "/audio/off-muerte-1-1.mock.mp3", "mock": true},
-            {"id": "off-1-2", "label": "Off Muerte 1.2", "src": "/audio/off-muerte-1-2.mock.mp3", "mock": true},
-            {"id": "off-1-3", "label": "Off Muerte 1.3", "src": "/audio/off-muerte-1-3.mock.mp3", "mock": true}
-          ],
-          "description": "La voz guía se fragmenta en tres pulsos que marcan el ritmo del túnel."
-        },
-        {
-          "id": "c1-frame-3",
-          "type": "visual-transition",
-          "headline": "La primera locación emerge",
-          "body": "Un destello azul se abre entre las paredes húmedas; el túnel se transforma en el pasaje hacia la primera decisión.",
-          "icon": "Sparkles"
-        }
-      ],
-      "icons": [
-        {
-          "id": "icon-tunel",
-          "icon": "Activity",
-          "label": "Pulso del túnel",
-          "description": "Cada vibración del metal recuerda que el tiempo es un espiral.",
-          "position": {"x": 62, "y": 68},
-          "mock": true
-        }
-      ],
-      "decisions": [
-        {
-          "id": "to-chapter-2",
-          "label": "Seguir el eco",
-          "description": "El eco de la voz te arrastra hacia el siguiente tramo.",
-          "nextChapterId": "chapter-2"
-        }
-      ]
-    },
-    {
-      "id": "chapter-2",
-      "order": 2,
-      "title": "Capítulo 2 – El principio del fin",
-      "tagline": "La luz duele antes de sanar",
-      "backgroundImage": "Tunel.png",
-      "textureOverlay": "Texturas.png",
-      "ambient": {
-        "mood": "lumínico",
-        "color": "#FFC857",
-        "audioCue": {
-          "id": "off-muerte-2",
-          "label": "Off Muerte 2.1",
-          "src": "/audio/off-muerte-2-1.mock.mp3",
-          "mock": true,
-          "description": "Giro hacia la revelación"
-        }
-      },
-      "contentBlocks": [
-        {
-          "id": "c2-block-1",
-          "type": "audio-sequence",
-          "label": "Off Muerte 2.1 – 2.5",
-          "clips": [
-            {"id": "off-2-1", "label": "2.1", "src": "/audio/off-muerte-2-1.mock.mp3", "mock": true},
-            {"id": "off-2-2", "label": "2.2", "src": "/audio/off-muerte-2-2.mock.mp3", "mock": true},
-            {"id": "off-2-3", "label": "2.3", "src": "/audio/off-muerte-2-3.mock.mp3", "mock": true},
-            {"id": "off-2-4", "label": "2.4", "src": "/audio/off-muerte-2-4.mock.mp3", "mock": true},
-            {"id": "off-2-5", "label": "2.5", "src": "/audio/off-muerte-2-5.mock.mp3", "mock": true}
-          ],
-          "description": "Una serie de confesiones envuelven el túnel mientras la luz dobla la perspectiva."
-        },
-        {
-          "id": "c2-block-2",
-          "type": "icon-focus",
-          "icon": "Sun",
-          "label": "La Luz",
-          "body": "El destello abre un documental íntimo sobre los recuerdos que se desvanecen."
-        },
-        {
-          "id": "c2-block-3",
-          "type": "media",
-          "media": {
-            "kind": "video",
-            "src": "https://storage.googleapis.com/coverr-main/mp4/Mt_Baker.mp4",
-            "poster": "Tunel.png",
-            "mock": true,
-            "caption": "Fragmentos del documental"
-          }
-        }
-      ],
-      "icons": [
-        {
-          "id": "icon-luz",
-          "icon": "Sun",
-          "label": "La Luz",
-          "description": "Ilumina la grieta y revela la siguiente capa de memoria.",
-          "position": {"x": 78, "y": 44},
-          "mock": true
-        }
-      ],
-      "decisions": [
-        {
-          "id": "to-chapter-3",
-          "label": "Atravesar el destello",
-          "description": "La luz te arrastra a un territorio incierto.",
-          "nextChapterId": "chapter-3"
-        }
-      ]
-    },
-    {
-      "id": "chapter-3",
-      "order": 3,
-      "title": "Capítulo 3 – Lugar incierto",
-      "tagline": "El desierto guarda las reliquias",
-      "backgroundImage": "Desierto.png",
-      "textureOverlay": "Texturas.png",
-      "ambient": {
-        "mood": "árido",
-        "color": "#F29E4C",
-        "audioCue": {
-          "id": "desierto-ambiente",
-          "label": "Viento cálido",
-          "src": "/audio/desierto-ambiente.mock.mp3",
-          "mock": true,
-          "description": "Soplo lejano que acompaña los íconos del desierto"
-        }
-      },
-      "contentBlocks": [
-        {
-          "id": "c3-block-1",
-          "type": "gallery",
-          "label": "Reliquias",
-          "items": [
-            {"id": "clock", "title": "Reloj", "description": "El tiempo detenido.", "icon": "Clock"},
-            {"id": "statue", "title": "Estatua", "description": "Memoria congelada en arena.", "icon": "Venus"},
-            {"id": "tile", "title": "Baldosa", "description": "Huella de un hogar perdido.", "icon": "Grid"},
-            {"id": "flower", "title": "Flor", "description": "Vida que resiste.", "icon": "Flower"
+          "id": "preludio-1",
+          "sequence": "1.1",
+          "speaker": "Muerte",
+          "text": "Respira… todo está bien; ¿cómo te sientes?",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 1.1",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "preludio-1-a",
+              "label": "¿Dónde estoy?",
+              "video360": true,
+              "nextStepId": "preludio-2"
+            },
+            {
+              "id": "preludio-1-b",
+              "label": "¿Quién sos?",
+              "video360": true,
+              "nextStepId": "preludio-2"
             }
-          ]
-        },
-        {
-          "id": "c3-block-2",
-          "type": "media",
-          "media": {
-            "kind": "panorama",
-            "src": "Desierto.png",
-            "mock": true,
-            "caption": "Vista 360° del desierto interior"
-          }
-        }
-      ],
-      "icons": [
-        {
-          "id": "icon-reloj",
-          "icon": "Clock",
-          "label": "Reloj enterrado",
-          "description": "Señala que la arena congela la memoria.",
-          "position": {"x": 30, "y": 72},
-          "mock": true
-        },
-        {
-          "id": "icon-flor",
-          "icon": "Flower",
-          "label": "Flor nocturna",
-          "description": "Resplandor tímido que anuncia transformación.",
-          "position": {"x": 66, "y": 38},
-          "mock": true
-        }
-      ],
-      "decisions": [
-        {
-          "id": "to-chapter-4",
-          "label": "Seguir las huellas",
-          "description": "El desierto conduce al pasillo de puertas.",
-          "nextChapterId": "chapter-4"
-        }
-      ]
-    },
-    {
-      "id": "chapter-4",
-      "order": 4,
-      "title": "Capítulo 4 – No todas las puertas conducen al final",
-      "tagline": "Cada puerta es un eco del pasado",
-      "backgroundImage": "Pasillo.png",
-      "textureOverlay": "Texturas.png",
-      "ambient": {
-        "mood": "laberinto",
-        "color": "#9D4EDD",
-        "audioCue": {
-          "id": "radionovela",
-          "label": "Radionovela",
-          "src": "/audio/radionovela.mock.mp3",
-          "mock": true,
-          "description": "Voces superpuestas que habitan el pasillo"
-        }
-      },
-      "contentBlocks": [
-        {
-          "id": "c4-block-1",
-          "type": "interactive-doors",
-          "doors": [
-            {"id": "door-1", "label": "Memoria", "nextChapterId": "chapter-5", "icon": "DoorOpen"},
-            {"id": "door-2", "label": "Olvido", "nextChapterId": "chapter-6", "icon": "DoorClosed"}
           ],
-          "description": "El pasillo susurra historias; cada puerta abre un paisaje emocional distinto."
-        }
-      ],
-      "icons": [
-        {
-          "id": "icon-puerta",
-          "icon": "DoorClosed",
-          "label": "Puerta en penumbra",
-          "description": "No todas conducen al final que imaginás.",
-          "position": {"x": 48, "y": 58},
-          "mock": true
-        }
-      ],
-      "decisions": [
-        {
-          "id": "to-chapter-5",
-          "label": "Abrir la puerta de la memoria",
-          "description": "Entrar al jardín que respira en penumbras.",
-          "nextChapterId": "chapter-5"
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "preludio-2"
+          }
         },
         {
-          "id": "to-chapter-6",
-          "label": "Seguir la voz de la radionovela",
-          "description": "Dejar que el eco te lleve al túnel final.",
-          "nextChapterId": "chapter-6"
+          "id": "preludio-2",
+          "sequence": "1.2",
+          "speaker": "Muerte",
+          "text": "No importa nada de eso, siempre quieren respuestas ustedes, pero siempre le han tenido miedo a hacer las preguntas correctas… Escuchá a tu alrededor, ¿Qué oís?",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 1.2",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "preludio-2-a",
+              "label": "Escucho gotas de agua",
+              "video360": true,
+              "nextStepId": "preludio-3"
+            },
+            {
+              "id": "preludio-2-b",
+              "label": "Escucho el viento resoplar",
+              "video360": true,
+              "nextStepId": "preludio-3"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "preludio-3"
+          }
+        },
+        {
+          "id": "preludio-3",
+          "sequence": "1.3",
+          "speaker": "Muerte",
+          "text": "Abrí tus ojos.",
+          "background": {
+            "src": "cueva serca.jpg",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 1.3",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "preludio-3-a",
+              "label": "Seguir",
+              "video360": false,
+              "nextStepId": "principio-1"
+            },
+            {
+              "id": "preludio-3-b",
+              "label": "Parpadear",
+              "video360": false,
+              "nextStepId": "principio-1"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "principio-1"
+          }
         }
       ]
     },
     {
-      "id": "chapter-5",
-      "order": 5,
-      "title": "Capítulo 5 – No busques el cielo, vivílo",
-      "tagline": "El jardín respira con vos",
-      "backgroundImage": "Jardi.png",
-      "textureOverlay": "Texturas.png",
-      "ambient": {
-        "mood": "botánico",
-        "color": "#54C6A7",
-        "audioCue": {
-          "id": "jazmin",
-          "label": "Jazmín de noche",
-          "src": "/audio/jazmin-noche.mock.mp3",
-          "mock": true,
-          "description": "Fragancia sonora que florece al anochecer"
-        }
+      "id": "capitulo-2",
+      "title": "Capítulo II · El principio del fin",
+      "theme": {
+        "accent": "#FFC857",
+        "backgroundColor": "#08050F"
       },
-      "contentBlocks": [
+      "steps": [
         {
-          "id": "c5-block-1",
-          "type": "media",
-          "media": {
-            "kind": "video",
-            "src": "https://storage.googleapis.com/coverr-main/mp4/Misty_Forest.mp4",
-            "poster": "Jardi.png",
-            "mock": true,
-            "caption": "Videoclip inmersivo"
+          "id": "principio-1",
+          "sequence": "2.0",
+          "speaker": "—",
+          "text": "El comienzo del túnel…",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": null,
+          "choices": [
+            {
+              "id": "principio-1-a",
+              "label": "¿Dónde estoy?",
+              "video360": true,
+              "nextStepId": "principio-2"
+            },
+            {
+              "id": "principio-1-b",
+              "label": "¿Morí?",
+              "video360": true,
+              "nextStepId": "principio-2"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "principio-2"
           }
         },
         {
-          "id": "c5-block-2",
-          "type": "narration",
-          "title": "El perfume del jazmín",
-          "body": "Las hojas se mueven al compás de tu respiración; el jardín te invita a habitar la noche."
-        }
-      ],
-      "icons": [
+          "id": "principio-2",
+          "sequence": "2.1",
+          "speaker": "Muerte",
+          "text": "¿Lo escuchas? Si escuchas con atención se puede oír el eco de tu propia voz regresando…",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 2.1",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "principio-2-a",
+              "label": "¿Cita?",
+              "video360": true,
+              "nextStepId": "principio-3"
+            },
+            {
+              "id": "principio-2-b",
+              "label": "¿Nos conocemos?",
+              "video360": true,
+              "nextStepId": "principio-3"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "principio-3"
+          }
+        },
         {
-          "id": "icon-jazmin",
-          "icon": "Leaf",
-          "label": "Jazmín de noche",
-          "description": "Fragancia que despierta recuerdos bioluminiscentes.",
-          "position": {"x": 24, "y": 36},
-          "mock": true
-        }
-      ],
-      "decisions": [
+          "id": "principio-3",
+          "sequence": "2.2",
+          "speaker": "Muerte",
+          "text": "Es muy loco, ¿no? Todos piensan que están soñando… No corras. No hay prisa. Nadie llega tarde al final.",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 2.2",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "media": {
+            "type": "documental",
+            "video360": true
+          },
+          "choices": [
+            {
+              "id": "principio-3-a",
+              "label": "Tengo frío",
+              "video360": true,
+              "nextStepId": "principio-4"
+            },
+            {
+              "id": "principio-3-b",
+              "label": "Tengo miedo",
+              "video360": true,
+              "nextStepId": "principio-4"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "principio-4"
+          }
+        },
         {
-          "id": "to-chapter-6-from-5",
-          "label": "Seguir la fragancia",
-          "description": "El perfume te lleva al túnel definitivo.",
-          "nextChapterId": "chapter-6"
+          "id": "principio-4",
+          "sequence": "2.3",
+          "speaker": "Muerte",
+          "text": "Es curioso, aquí todos llegan buscando respuestas, pero se van siendo silencio… ¿Cómo te sientes?",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 2.3",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "principio-4-a",
+              "label": "¿A qué te refieres?",
+              "video360": true,
+              "nextStepId": "principio-5"
+            },
+            {
+              "id": "principio-4-b",
+              "label": "¿No estás solo?",
+              "video360": true,
+              "nextStepId": "principio-5"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "principio-5"
+          }
+        },
+        {
+          "id": "principio-5",
+          "sequence": "2.4",
+          "speaker": "Muerte",
+          "text": "Te ofrezco la mano; no para llevarte, sino para que no caigas antes de tiempo…",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 2.4",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "principio-5-a",
+              "label": "¿A dónde quieres ir ahora?",
+              "video360": true,
+              "nextStepId": "principio-6"
+            },
+            {
+              "id": "principio-5-b",
+              "label": "Mirar atrás",
+              "video360": true,
+              "nextStepId": "principio-6"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "principio-6"
+          }
+        },
+        {
+          "id": "principio-6",
+          "sequence": "2.5",
+          "speaker": "Muerte",
+          "text": "Jajaja… podrías intentar averiguarlo… ¿A dónde quieres ir ahora?",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 2.5",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "principio-6-a",
+              "label": "A donde las huellas desaparecen",
+              "video360": true,
+              "nextStepId": "desierto-1"
+            },
+            {
+              "id": "principio-6-b",
+              "label": "Donde las promesas rotas se vuelven arena",
+              "video360": true,
+              "nextStepId": "desierto-1"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "desierto-1"
+          }
         }
       ]
     },
     {
-      "id": "chapter-6",
-      "order": 6,
-      "title": "Capítulo 6 – Lo que deba ser, será",
-      "tagline": "El túnel final se abre en destellos",
-      "backgroundImage": "TunelFinal.png",
-      "textureOverlay": "Texturas.png",
-      "ambient": {
-        "mood": "epílogo",
-        "color": "#6C63FF",
-        "audioCue": {
-          "id": "videopodcast",
-          "label": "Videopodcast",
-          "src": "/audio/videopodcast.mock.mp3",
-          "mock": true,
-          "description": "Testimonios finales"
-        }
+      "id": "capitulo-3",
+      "title": "Capítulo III · Lugar incierto",
+      "theme": {
+        "accent": "#F29E4C",
+        "backgroundColor": "#120A05"
       },
-      "contentBlocks": [
+      "steps": [
         {
-          "id": "c6-block-1",
-          "type": "narration",
-          "title": "La luz al final",
-          "body": "El túnel se rompe en partículas; la luz y la sombra conviven en un mismo destello."
-        },
-        {
-          "id": "c6-block-2",
-          "type": "media",
-          "media": {
-            "kind": "video",
-            "src": "https://storage.googleapis.com/coverr-main/mp4/Footboys.mp4",
-            "poster": "TunelFinal.png",
-            "mock": true,
-            "caption": "Videopodcast final"
+          "id": "desierto-1",
+          "sequence": "3.1",
+          "speaker": "Muerte",
+          "text": "Mirá bien a tu alrededor… acá todo lo que fuiste se deshace lento, cómo la arena en el viento.",
+          "background": {
+            "src": "desierto.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 3.1",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "desierto-1-a",
+              "label": "¿Por qué estoy aquí?",
+              "video360": true,
+              "nextStepId": "desierto-2"
+            },
+            {
+              "id": "desierto-1-b",
+              "label": "¿Para qué me muestras todo esto?",
+              "video360": true,
+              "nextStepId": "desierto-2"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "desierto-2"
           }
         },
         {
-          "id": "c6-block-3",
-          "type": "credits",
-          "label": "Detrás de cámaras",
-          "items": [
-            "Dirección artística: Nombre Artista",
-            "Diseño sonoro: Equipo Sonoro",
-            "Producción ejecutiva: Producción X",
-            "Agradecimientos: Comunidad"
-          ]
-        }
-      ],
-      "icons": [
+          "id": "desierto-2",
+          "sequence": "3.2",
+          "speaker": "Muerte",
+          "text": "¡¿Por qué seguís buscando respuestas cuando ya no hay preguntas?! … Esta arena se alimenta de arrepentimientos.",
+          "background": {
+            "src": "desierto.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 3.2",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "media": {
+            "type": "panorama",
+            "video360": true
+          },
+          "choices": [
+            {
+              "id": "desierto-2-a",
+              "label": "Seguir observando",
+              "video360": true,
+              "nextStepId": "desierto-3"
+            },
+            {
+              "id": "desierto-2-b",
+              "label": "Cerrar los ojos",
+              "video360": true,
+              "nextStepId": "desierto-3"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "desierto-3"
+          }
+        },
         {
-          "id": "icon-luz-final",
-          "icon": "Sparkles",
-          "label": "Destello final",
-          "description": "Marca el cierre y la apertura de una nueva memoria.",
-          "position": {"x": 52, "y": 30},
-          "mock": true
+          "id": "desierto-3",
+          "sequence": "3.3",
+          "speaker": "Muerte",
+          "text": "Del otro lado sólo hay silencio… ¿Estás listo para seguir? ¿A dónde quieres ir ahora?",
+          "background": {
+            "src": "desierto.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 3.3",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "desierto-3-a",
+              "label": "A donde el aire huele a despedida",
+              "video360": true,
+              "nextStepId": "pasillo-1"
+            },
+            {
+              "id": "desierto-3-b",
+              "label": "A donde caminar este pasillo es volver a rozar todo lo que amaste",
+              "video360": true,
+              "nextStepId": "pasillo-1"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "pasillo-1"
+          }
         }
-      ],
-      "decisions": []
+      ]
+    },
+    {
+      "id": "capitulo-4",
+      "title": "Capítulo IV · No todas las puertas conducen al final",
+      "theme": {
+        "accent": "#9D4EDD",
+        "backgroundColor": "#090513"
+      },
+      "steps": [
+        {
+          "id": "pasillo-1",
+          "sequence": "4.1",
+          "speaker": "Muerte",
+          "text": "A veces soy solo una puerta que nadie supo abrir… A veces, abrir no es avanzar. Es aceptar.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 4.1",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "media": {
+            "type": "radionovela",
+            "video360": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-a",
+              "label": "Escuchar la puerta izquierda",
+              "video360": true,
+              "nextStepId": "pasillo-2"
+            },
+            {
+              "id": "pasillo-1-b",
+              "label": "Escuchar la puerta derecha",
+              "video360": true,
+              "nextStepId": "pasillo-2"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "pasillo-2"
+          }
+        },
+        {
+          "id": "pasillo-2",
+          "sequence": "4.2",
+          "speaker": "Muerte",
+          "text": "La vida siguió floreciendo… Queda poco, sólo puedes visitar un sitio más.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 4.2",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-2-a",
+              "label": "A donde el rocío no necesitaba ser eterno",
+              "video360": true,
+              "nextStepId": "jardin-1"
+            },
+            {
+              "id": "pasillo-2-b",
+              "label": "A donde el sol no te juzgaba",
+              "video360": true,
+              "nextStepId": "jardin-1"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "jardin-1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "capitulo-5",
+      "title": "Capítulo V · No busques el cielo, vivilo",
+      "theme": {
+        "accent": "#54C6A7",
+        "backgroundColor": "#06100B"
+      },
+      "steps": [
+        {
+          "id": "jardin-1",
+          "sequence": "5.1",
+          "speaker": "—",
+          "text": "Transición al jardín. Se habilita el ícono Jazmín para comenzar el videoclip.",
+          "background": {
+            "src": "Jardín.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": null,
+          "media": {
+            "type": "videoclip",
+            "video360": true
+          },
+          "choices": [
+            {
+              "id": "jardin-1-a",
+              "label": "Escuchar el jazmín",
+              "video360": true,
+              "nextStepId": "tunel-1"
+            },
+            {
+              "id": "jardin-1-b",
+              "label": "Seguir sin mirar atrás",
+              "video360": true,
+              "nextStepId": "tunel-1"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "tunel-1"
+          }
+        }
+      ]
+    },
+    {
+      "id": "capitulo-6",
+      "title": "Capítulo VI · Lo que deba ser, será",
+      "theme": {
+        "accent": "#6C63FF",
+        "backgroundColor": "#08060F"
+      },
+      "steps": [
+        {
+          "id": "tunel-1",
+          "sequence": "6.1",
+          "speaker": "Muerte",
+          "text": "La muerte no destruye, solo hace visible lo que siempre fue efímero. Llegaste…",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 6.1",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "tunel-1-a",
+              "label": "¿Qué pasará cuando cruce esa luz?",
+              "video360": true,
+              "nextStepId": "tunel-2"
+            },
+            {
+              "id": "tunel-1-b",
+              "label": "¿Qué sigue ahora?",
+              "video360": true,
+              "nextStepId": "tunel-2"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "tunel-2"
+          }
+        },
+        {
+          "id": "tunel-2",
+          "sequence": "6.2",
+          "speaker": "Muerte",
+          "text": "Temen morir, pero se olvidan de vivir… Si hubieras sabido que estabas en el paraíso, ¿lo habrías vivido distinto?",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 6.2",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "media": {
+            "type": "videopodcast",
+            "video360": true
+          },
+          "choices": [
+            {
+              "id": "tunel-2-a",
+              "label": "Escuchar las voces",
+              "video360": true,
+              "nextStepId": "tunel-3"
+            },
+            {
+              "id": "tunel-2-b",
+              "label": "Cerrar los ojos y sentir",
+              "video360": true,
+              "nextStepId": "tunel-3"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "tunel-3"
+          }
+        },
+        {
+          "id": "tunel-3",
+          "sequence": "6.3",
+          "speaker": "Muerte",
+          "text": "Ya no hay más camino, solo el eco de tus pasos despidiéndose de sí mismo… recordando siempre que la hora es incierta.",
+          "background": {
+            "src": "cuevadondo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/audio/off-muerte-1-1.wav",
+            "title": "Off Muerte 6.3",
+            "loop": false,
+            "autoplay": true,
+            "mock": true
+          },
+          "choices": [
+            {
+              "id": "tunel-3-a",
+              "label": "Ver créditos",
+              "video360": false,
+              "nextStepId": "credits"
+            },
+            {
+              "id": "tunel-3-b",
+              "label": "Escuchar eco final",
+              "video360": false,
+              "nextStepId": "credits"
+            }
+          ],
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "credits"
+          }
+        }
+      ]
     }
-  ]
+  ],
+  "epilogue": {
+    "id": "credits",
+    "title": "Créditos",
+    "text": "Proyecto de grado · Hora Incierta",
+    "actions": [
+      {
+        "id": "restart",
+        "label": "Reiniciar recorrido"
+      }
+    ]
+  }
 }
