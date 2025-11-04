@@ -43,7 +43,7 @@ const IntroScreen = ({ onStart }) => {
           transition={{ delay: 0.2, duration: 0.6 }}
           className="uppercase tracking-[0.3em] text-xs text-white/60 sm:text-sm"
         >
-          La Hora Incierta
+          Hora Incierta
         </motion.span>
 
         <motion.h1
