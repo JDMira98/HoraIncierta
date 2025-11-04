@@ -741,7 +741,7 @@ const ButterflyFlow = () => {
         transition={{ duration: 1.2, ease: 'easeOut' }}
       />
 
-      <div className="relative z-20 flex h-full w-full flex-col px-4 py-6 sm:px-6 md:px-12 md:py-8">
+      <div className="relative z-20 flex h-full w-full flex-col px-4 py-8 sm:px-6 sm:py-6 md:px-12 md:py-8">
         <header className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between md:gap-6">
           <div className="space-y-1 text-left">
             <p className="text-[9px] uppercase tracking-[0.35em] text-white/60 sm:text-[10px]">{chapterTitle}</p>
@@ -808,7 +808,7 @@ const ButterflyFlow = () => {
           </motion.div>
         </main>
 
-        <footer className="mt-6 flex w-full flex-col items-center gap-5 footer-safe pointer-events-auto z-20 px-2">
+        <footer className="mt-8 mb-10 flex w-full flex-col items-center gap-5 footer-safe pointer-events-auto z-20 px-2">
           {showCountdown && (
             <div className="flex w-full max-w-sm flex-col items-center gap-2 rounded-3xl bg-white/6 px-4 py-3 text-center backdrop-blur-sm">
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/15">
@@ -879,7 +879,7 @@ const ButterflyFlow = () => {
             exit={{ opacity: 0 }}
           >
               <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-white/15 bg-black video-overlay-full">
-                <div className="absolute inset-0">
+                <div className="absolute inset-0 mb-10">
                 <iframe
                   title={videoOverlay.title ?? 'Video 360°'}
                   src={overlayEmbedSrc}
