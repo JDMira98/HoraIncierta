@@ -394,7 +394,7 @@
           "id": "desierto-2",
           "sequence": "3.2",
           "speaker": "Muerte",
-          "text": "¡¿Por qué seguís buscando respuestas cuando ya no hay preguntas?! … Esta arena se alimenta de arrepentimientos.",
+          "text": "¡¿Por qué seguís buscando respuestas cuando ya no hay preguntas?! ¿Querés saber qué esconde realmente estas arenas? presta mucha atención a tu alrededor, te lo voy a mostrar. ",
           "background": {
             "src": "desierto.mp4",
             "animation": "zoomIn"
@@ -410,17 +410,57 @@
             "type": "panorama",
             "video360": false
           },
-          "choices": [
+          "interactiveIcons": [
             {
-              "id": "desierto-2-a",
-              "label": "Seguir observando",
-              "video360": false,
+              "id": "desierto-2-baldosa",
+              "label": "Fragmento de baldosa",
+              "subtitle": "Rastro que aún guarda calor",
+              "icon": "Baldosa.png",
+              "video": {
+                "type": "youtube",
+                "id": "NFW0LA_r2LY",
+                "title": "Fragmento de baldosa · 360°"
+              },
+              "continueLabel": "Regresar al desierto",
               "nextStepId": "desierto-3"
             },
             {
-              "id": "desierto-2-b",
-              "label": "Cerrar los ojos",
-              "video360": false,
+              "id": "desierto-2-estatua",
+              "label": "Estatua velada",
+              "subtitle": "Los recuerdos miran de reojo",
+              "icon": "Estatua.png",
+              "video": {
+                "type": "youtube",
+                "id": "spjAxa1MFY8",
+                "title": "Estatua velada · 360°"
+              },
+              "continueLabel": "Seguir caminando",
+              "nextStepId": "desierto-3"
+            },
+            {
+              "id": "desierto-2-flor",
+              "label": "Flor suspendida",
+              "subtitle": "Lo que aún se resiste a marchitar",
+              "icon": "florsert.png",
+              "video": {
+                "type": "youtube",
+                "id": "umcn8LwuFg0",
+                "title": "Flor suspendida · 360°"
+              },
+              "continueLabel": "Volver al viento",
+              "nextStepId": "desierto-3"
+            },
+            {
+              "id": "desierto-2-reloj",
+              "label": "Reloj de arena",
+              "subtitle": "El tiempo se escurre distinto aquí",
+              "icon": "reloj de arena.png",
+              "video": {
+                "type": "youtube",
+                "id": "uujKlJI8yqY",
+                "title": "Reloj de arena · 360°"
+              },
+              "continueLabel": "Continuar",
               "nextStepId": "desierto-3"
             }
           ],
@@ -640,7 +680,7 @@
           "id": "tunel-2",
           "sequence": "6.2",
           "speaker": "Muerte",
-          "text": "Temen morir, pero se olvidan de vivir… Si hubieras sabido que estabas en el paraíso, ¿lo habrías vivido distinto?",
+          "text": "Me hace gracias eso, temen morir, pero se olvidan de vivir. Creen que después de esto estará el paraíso, pero el paraíso siempre estuvo bajo sus pies. Dicen que todos mueren para alcanzar la paz, y la paz estaba acá en el aire puro que respiraban, Si hubieras sabido que estabas en el paraíso, ¿lo habrías vivido distinto?",
           "background": {
             "src": "cuevadondo.mp4",
             "animation": "zoomIn"
@@ -654,22 +694,18 @@
           },
           "media": {
             "type": "videopodcast",
-            "video360": false
-          },
-          "choices": [
-            {
-              "id": "tunel-2-a",
-              "label": "Escuchar las voces",
-              "video360": false,
-              "nextStepId": "tunel-3"
+            "video360": {
+              "type": "youtube",
+              "id": "TfMOask1YdM",
+              "title": "Videopodcast 360°",
+              "start": 5
             },
-            {
-              "id": "tunel-2-b",
-              "label": "Cerrar los ojos y sentir",
-              "video360": false,
-              "nextStepId": "tunel-3"
-            }
-          ],
+            "autoLaunch": true,
+            "seconds": 5,
+            "label": "Videopodcast",
+            "continueLabel": "Continuar",
+            "nextStepId": "tunel-3"
+          },
           "skip": {
             "label": "Omitir",
             "nextStepId": "tunel-3"

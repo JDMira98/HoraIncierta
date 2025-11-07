@@ -33,6 +33,7 @@ const choiceVariants = {
 };
 
 const FONDOS_BASE_PATH = '/Elementos Web/fondos/';
+const ICONOS_BASE_PATH = '/Elementos Web/Iconos/';
 
 const resolveAssetPath = (rawPath, { fallbackDir } = {}) => {
   if (!rawPath) {
@@ -204,7 +205,19 @@ const ButterflyFlow = () => {
   const currentChapter = currentStepId ? chapterByStep.get(currentStepId) : null;
   const totalSteps = stepOrder.length;
   const currentIndex = currentStep ? stepOrder.indexOf(currentStep.id) : -1;
-  const canRevealChoices = Boolean(currentStep?.choices?.length) && textComplete && audioComplete;
+  const iconVideoOptions = useMemo(() => {
+    const icons = currentStep?.interactiveIcons ?? [];
+    return icons.map((icon) => ({
+      ...icon,
+      asset: resolveAssetPath(icon.icon ?? icon.asset ?? icon.src ?? null, {
+        fallbackDir: ICONOS_BASE_PATH,
+      }),
+    }));
+  }, [currentStep]);
+  const hasIconVideos = iconVideoOptions.length > 0;
+  const hasChoices = Boolean(currentStep?.choices?.length) && !hasIconVideos;
+  const canRevealChoices = hasChoices && textComplete && audioComplete;
+  const canInteractWithIcons = hasIconVideos && textComplete && audioComplete;
 
   useEffect(() => {
     return () => {
@@ -491,11 +504,57 @@ const ButterflyFlow = () => {
     goToStep(choice.nextStepId);
   }, [clearAutoLaunchTimer, clearChoiceTimer, goToStep, settings]);
 
+  const handleIconVideo = useCallback((iconOption) => {
+    if (!iconOption) {
+      return;
+    }
+
+    clearChoiceTimer();
+    clearAutoLaunchTimer();
+
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+
+    const videoConfig = resolveVideoConfig(iconOption.video ?? iconOption, settings);
+    const fallbackNextStep = iconOption.nextStepId ?? currentStep?.skip?.nextStepId ?? null;
+
+    const hasValidMedia = Boolean(
+      videoConfig
+      && ((videoConfig.type === 'youtube' && videoConfig.id) || videoConfig.src)
+    );
+
+    if (!hasValidMedia) {
+      if (fallbackNextStep) {
+        goToStep(fallbackNextStep);
+      }
+      return;
+    }
+
+    setActiveChoice({
+      id: iconOption.id,
+      label: iconOption.label,
+      subtitle: iconOption.subtitle,
+      origin: 'icon',
+    });
+    setVideoOverlay({
+      ...videoConfig,
+      nextStepId: fallbackNextStep,
+      label: iconOption.label ?? videoConfig.label ?? videoConfig.title,
+      continueLabel: iconOption.continueLabel ?? videoConfig.continueLabel ?? 'Continuar',
+      origin: 'icon',
+      autoplay: iconOption.autoplay ?? videoConfig.autoplay ?? true,
+      muted: iconOption.muted ?? videoConfig.muted,
+      controls: iconOption.controls ?? videoConfig.controls,
+      params: iconOption.params ?? videoConfig.params,
+    });
+  }, [clearAutoLaunchTimer, clearChoiceTimer, currentStep, goToStep, settings]);
+
   useEffect(() => {
     clearChoiceTimer();
     setChoiceTimeLeft(null);
 
-    if (!canRevealChoices || !currentStep?.choices?.length) {
+    if (!canRevealChoices || !hasChoices) {
       return;
     }
 
@@ -528,7 +587,7 @@ const ButterflyFlow = () => {
     return () => {
       clearChoiceTimer();
     };
-  }, [canRevealChoices, clearChoiceTimer, currentStep, handleChoice, settings]);
+  }, [canRevealChoices, clearChoiceTimer, currentStep, handleChoice, hasChoices, settings]);
 
   const handleSkip = () => {
     if (!currentStep?.skip) {
@@ -582,13 +641,14 @@ const ButterflyFlow = () => {
   const hasBackgroundImage = backgroundMedia?.type === 'image';
   const hasBackgroundVideo = backgroundMedia?.type === 'video';
   const chapterTitle = currentChapter?.title ?? meta?.title ?? 'Hora Incierta';
-  const choiceTimeoutMs = currentStep?.choiceTimerMs ?? settings?.choiceTimerMs ?? 15000;
+  const choiceTimeoutMs = hasChoices
+    ? currentStep?.choiceTimerMs ?? settings?.choiceTimerMs ?? 15000
+    : 0;
   const choiceCountdownSeconds = choiceTimeLeft !== null ? Math.ceil(choiceTimeLeft / 1000) : null;
   const choiceProgress = choiceTimeLeft !== null && choiceTimeoutMs > 0
     ? Math.max(choiceTimeLeft / choiceTimeoutMs, 0)
     : null;
-  const hasChoices = Boolean(currentStep?.choices?.length);
-  const isSkipVisible = Boolean(currentStep?.skip) && !hasChoices;
+  const isSkipVisible = Boolean(currentStep?.skip) && (!hasChoices || hasIconVideos);
   const showCountdown = hasChoices && choiceCountdownSeconds !== null;
   const audioButtonClasses = isAudioEnabled
     ? 'border-white/60 bg-white/15 text-white'
@@ -808,7 +868,62 @@ const ButterflyFlow = () => {
           </motion.div>
         </main>
 
-        <footer className="mt-8 mb-10 flex w-full flex-col items-center gap-5 footer-safe pointer-events-auto z-20 px-2">
+        <footer className="mt-2 mb-8 flex w-full flex-col items-center gap-4 footer-safe pointer-events-auto z-20 px-2">
+          <AnimatePresence>
+            {canInteractWithIcons && (
+              <motion.div
+                key={`icon-grid-${currentStep.id}`}
+                className="grid w-full max-w-lg grid-cols-2 gap-2 rounded-3xl border border-white/10 bg-black/40 p-2.5 shadow-[0_12px_40px_rgba(0,0,0,0.45)] sm:max-w-3xl sm:grid-cols-4 sm:gap-3 sm:p-4"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 16 }}
+              >
+                {iconVideoOptions.map((icon, idx) => (
+                  <motion.button
+                    key={icon.id ?? idx}
+                    type="button"
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-white/15 bg-white/8 px-2.5 py-2.5 text-center text-white/80 shadow-[0_0_18px_rgba(0,0,0,0.28)] backdrop-blur-sm transition hover:border-white/40 hover:bg-white/12 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 sm:gap-3 sm:px-3.5 sm:py-4"
+                    style={{ boxShadow: `0 0 28px ${accentColor}22` }}
+                    whileHover={{ scale: 1.03 }}
+                    whileTap={{ scale: 0.96 }}
+                    onClick={() => handleIconVideo(icon)}
+                  >
+                    <div className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border border-white/20 bg-black/50 shadow-inner sm:h-16 sm:w-16 md:h-20 md:w-20">
+                      {icon.asset ? (
+                        <img
+                          src={icon.asset}
+                          alt={icon.label ?? 'Recurso 360°'}
+                          className="relative z-10 h-full w-full object-contain"
+                        />
+                      ) : (
+                        <span className="relative z-10 text-xs uppercase tracking-[0.35em] text-white/70">
+                          360°
+                        </span>
+                      )}
+                      <motion.div
+                        className="pointer-events-none absolute inset-0 rounded-full border border-white/25"
+                        initial={{ opacity: 0.25, scale: 0.95 }}
+                        animate={{ opacity: [0.2, 0.6, 0.2], scale: [0.95, 1.05, 0.95] }}
+                        transition={{ repeat: Infinity, duration: 3.6, ease: 'easeInOut', delay: idx * 0.12 }}
+                        style={{ boxShadow: `0 0 18px ${accentColor}2f` }}
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-[8px] uppercase tracking-[0.22em] text-white sm:text-[10px]">
+                        {icon.label}
+                      </p>
+                      {icon.subtitle && (
+                        <p className="text-[7.5px] text-white/55 sm:text-[9px]">
+                          {icon.subtitle}
+                        </p>
+                      )}
+                    </div>
+                  </motion.button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {showCountdown && (
             <div className="flex w-full max-w-sm flex-col items-center gap-2 rounded-3xl bg-white/6 px-4 py-3 text-center backdrop-blur-sm">
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/15">
@@ -877,35 +992,54 @@ const ButterflyFlow = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 24px)' }}
           >
-              <div className="relative w-full max-w-4xl overflow-hidden rounded-3xl border border-white/15 bg-black video-overlay-full">
-                <div className="absolute inset-0 mb-10">
+            <div className="flex w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-white/15 bg-black/80 text-white shadow-[0_20px_60px_rgba(0,0,0,0.45)] backdrop-blur-lg">
+              <div
+                className="relative w-full"
+                style={{ aspectRatio: '16 / 9', minHeight: '240px' }}
+              >
                 <iframe
                   title={videoOverlay.title ?? 'Video 360°'}
                   src={overlayEmbedSrc}
                   className="absolute inset-0 h-full w-full"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; magnetometer; picture-in-picture; web-share; vr; xr-spatial-tracking"
+                  allowtransparency="true"
+                  webkitallowfullscreen="true"
+                  mozallowfullscreen="true"
+                  frameBorder="0"
                   allowFullScreen
                 />
               </div>
-                <div className="absolute left-0 right-0 bottom-0 flex items-center justify-between gap-2 border-t border-white/10 bg-black/40 px-4 py-3 text-[11px] uppercase tracking-[0.25em] text-white/70 sm:text-xs">
-                  <span className="truncate pr-2">{videoOverlay.label ?? activeChoice?.label ?? videoOverlay.title ?? ''}</span>
-                <button
-                  type="button"
-                  className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-white transition hover:border-white/60 hover:bg-white/20"
-                  onClick={() => {
-                    const next = videoOverlay.nextStepId;
-                    setVideoOverlay(null);
-                    setActiveChoice(null);
-                    setAudioComplete(true);
-                    clearAutoLaunchTimer();
-                    if (next) {
-                      goToStep(next);
-                    }
-                  }}
-                >
-                  {videoOverlay.continueLabel ?? 'Continuar'}
-                </button>
+              <div className="safe-bottom flex flex-col gap-3 border-t border-white/10 bg-black/60 px-4 py-4 text-[11px] tracking-[0.25em] text-white/70 sm:flex-row sm:items-center sm:justify-between sm:text-xs">
+                <div className="flex w-full flex-col gap-1 text-left sm:items-end sm:text-right">
+                  <span className="truncate pr-2 uppercase">
+                    {videoOverlay.label ?? activeChoice?.label ?? videoOverlay.title ?? ''}
+                  </span>
+                  {activeChoice?.subtitle && (
+                    <span className="text-[10px] font-normal tracking-[0.18em] text-white/55 sm:text-[11px]">
+                      {activeChoice.subtitle}
+                    </span>
+                  )}
+                </div>
+                <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4">
+                  <button
+                    type="button"
+                    className="rounded-full border border-white/30 bg-white/10 px-4 py-2 text-[10px] uppercase tracking-[0.3em] text-white transition hover:border-white/60 hover:bg-white/20"
+                    onClick={() => {
+                      const next = videoOverlay.nextStepId;
+                      setVideoOverlay(null);
+                      setActiveChoice(null);
+                      setAudioComplete(true);
+                      clearAutoLaunchTimer();
+                      if (next) {
+                        goToStep(next);
+                      }
+                    }}
+                  >
+                    {videoOverlay.continueLabel ?? 'Continuar'}
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
