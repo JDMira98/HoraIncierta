@@ -66,47 +66,33 @@ const IntroScreen = ({ onStart }) => {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, scale: 0.88 }}
+          initial={{ opacity: 0, scale: 0.92 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.8, duration: 0.75 }}
-          className="mt-12 flex flex-col items-center gap-6 sm:mt-14"
+          className="mt-1 flex flex-col items-center gap-6 sm:mt-14"
         >
-          <div className="relative flex h-24 w-24 items-center justify-center sm:h-28 sm:w-28">
-            <motion.div
-              className="absolute inset-0 rounded-full border border-white/20"
-              animate={{ scale: [1, 1.08, 1] }}
-              transition={{ repeat: Infinity, duration: 4.4, ease: 'easeInOut' }}
+          <motion.div
+            className="relative overflow-hidden rounded-full border border-white/25 shadow-[0_0_45px_rgba(255,255,255,0.18)]"
+            animate={{ boxShadow: [
+              '0 0 32px rgba(255,255,255,0.12)',
+              '0 0 50px rgba(255,255,255,0.18)',
+              '0 0 32px rgba(255,255,255,0.12)'
+            ] }}
+            transition={{ repeat: Infinity, duration: 6.5, ease: 'easeInOut' }}
+          >
+            <video
+              className="h-32 w-32 object-cover sm:h-40 sm:w-40"
+              src="/Elementos Web/Logo animado LOLO.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              aria-label="Logo animado de LOLO"
             />
-
-            <motion.div
-              className="absolute inset-3 rounded-full border border-red-500/40"
-              animate={{ opacity: [0.2, 0.65, 0.2], scale: [1, 0.92, 1] }}
-              transition={{ repeat: Infinity, duration: 3.4, ease: 'easeInOut', repeatDelay: 0.3 }}
-            />
-
-            <motion.div
-              className="absolute h-1 w-16 bg-gradient-to-r from-transparent via-white/70 to-transparent"
-              animate={{ opacity: [0.15, 0.75, 0.15] }}
-              transition={{ repeat: Infinity, duration: 2.2, ease: 'easeInOut' }}
-            />
-
-            <motion.div
-              className="absolute h-16 w-1 bg-gradient-to-b from-transparent via-red-500/70 to-transparent"
-              animate={{ opacity: [0.1, 0.75, 0.1] }}
-              transition={{ repeat: Infinity, duration: 2.6, ease: 'easeInOut', delay: 0.4 }}
-            />
-
-            <motion.span
-              className="relative text-xs uppercase tracking-[0.35em] text-white/70"
-              animate={{ opacity: [0.4, 0.95, 0.4] }}
-              transition={{ repeat: Infinity, duration: 3.6, ease: 'easeInOut', delay: 0.2 }}
-            >
-              Mori
-            </motion.span>
-          </div>
+          </motion.div>
 
           <p className="max-w-md text-sm uppercase tracking-[0.35em] text-white/50">
-            Esperando a que el velo se levante
+            Logo vivo. Pulso de la experiencia
           </p>
         </motion.div>
 
@@ -114,7 +100,7 @@ const IntroScreen = ({ onStart }) => {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.1, duration: 0.65 }}
-          className="mt-8 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-xs text-white/80 backdrop-blur sm:mt-5 sm:text-sm"
+          className="mt-2 inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-5 py-3 text-xs text-white/80 backdrop-blur sm:mt-5 sm:text-sm"
         >
           <Headphones size={18} className="text-white/60" />
           <span>Usa audífonos. El sonido te guiará hacia el otro lado.</span>

@@ -176,13 +176,18 @@ const ButterflyFlow = () => {
   const [textComplete, setTextComplete] = useState(false);
   const [audioComplete, setAudioComplete] = useState(true);
   const [audioBlocked, setAudioBlocked] = useState(false);
-  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
+  const [isAudioEnabled, setIsAudioEnabled] = useState(true);
   const [videoOverlay, setVideoOverlay] = useState(null);
   const [activeChoice, setActiveChoice] = useState(null);
   const [isEpilogue, setIsEpilogue] = useState(false);
   const [choiceTimeLeft, setChoiceTimeLeft] = useState(null);
+  const [audioDuration, setAudioDuration] = useState(null);
+  const [isTypewriterReady, setIsTypewriterReady] = useState(true);
+  const [showAudioGuidanceHint, setShowAudioGuidanceHint] = useState(false);
   const audioRef = useRef(null);
   const choiceTimerRef = useRef(null);
+  const typewriterTimerRef = useRef(null);
+  const typewriterFallbackTimerRef = useRef(null);
   const hasTriggeredAutoMediaRef = useRef(false);
   const autoLaunchTimerRef = useRef(null);
 
@@ -215,9 +220,102 @@ const ButterflyFlow = () => {
     }));
   }, [currentStep]);
   const hasIconVideos = iconVideoOptions.length > 0;
+
+  useEffect(() => {
+    if (typewriterTimerRef.current) {
+      clearTimeout(typewriterTimerRef.current);
+      typewriterTimerRef.current = null;
+    }
+
+    if (typewriterFallbackTimerRef.current) {
+      clearTimeout(typewriterFallbackTimerRef.current);
+      typewriterFallbackTimerRef.current = null;
+    }
+
+    if (!currentStep) {
+      setTypedText('');
+      setTextComplete(true);
+      setAudioDuration(null);
+      setIsTypewriterReady(true);
+      setShowAudioGuidanceHint(false);
+      return;
+    }
+
+    setTypedText('');
+    setTextComplete(false);
+    setAudioDuration(null);
+    setIsTypewriterReady(!currentStep.audio?.src);
+    setShowAudioGuidanceHint(false);
+  }, [currentStep]);
+
   const hasChoices = Boolean(currentStep?.choices?.length) && !hasIconVideos;
   const canRevealChoices = hasChoices && textComplete && audioComplete;
   const canInteractWithIcons = hasIconVideos && textComplete && audioComplete;
+
+  useEffect(() => {
+    if (audioBlocked && showAudioGuidanceHint) {
+      setShowAudioGuidanceHint(false);
+    }
+    if (audioBlocked && !isTypewriterReady) {
+      setIsTypewriterReady(true);
+    }
+
+    if (!currentStep?.audio?.src) {
+      if (typewriterFallbackTimerRef.current) {
+        clearTimeout(typewriterFallbackTimerRef.current);
+        typewriterFallbackTimerRef.current = null;
+      }
+      if (!isTypewriterReady) {
+        setIsTypewriterReady(true);
+      }
+      if (showAudioGuidanceHint) {
+        setShowAudioGuidanceHint(false);
+      }
+      return;
+    }
+
+    if (audioDuration) {
+      if (typewriterFallbackTimerRef.current) {
+        clearTimeout(typewriterFallbackTimerRef.current);
+        typewriterFallbackTimerRef.current = null;
+      }
+      if (!isTypewriterReady) {
+        setIsTypewriterReady(true);
+      }
+      if (isAudioEnabled && !audioBlocked && !showAudioGuidanceHint) {
+        setShowAudioGuidanceHint(true);
+      }
+      if (!isAudioEnabled && showAudioGuidanceHint) {
+        setShowAudioGuidanceHint(false);
+      }
+      return;
+    }
+
+    if (typewriterFallbackTimerRef.current) {
+      clearTimeout(typewriterFallbackTimerRef.current);
+      typewriterFallbackTimerRef.current = null;
+    }
+
+    if (typeof window === 'undefined') {
+      setIsTypewriterReady(true);
+      return;
+    }
+
+    typewriterFallbackTimerRef.current = window.setTimeout(() => {
+      setIsTypewriterReady(true);
+      typewriterFallbackTimerRef.current = null;
+      if (isAudioEnabled && !audioBlocked && !showAudioGuidanceHint) {
+        setShowAudioGuidanceHint(true);
+      }
+    }, 800);
+
+    return () => {
+      if (typewriterFallbackTimerRef.current) {
+        clearTimeout(typewriterFallbackTimerRef.current);
+        typewriterFallbackTimerRef.current = null;
+      }
+    };
+  }, [audioBlocked, audioDuration, currentStep, isAudioEnabled, isTypewriterReady, showAudioGuidanceHint]);
 
   useEffect(() => {
     return () => {
@@ -225,38 +323,52 @@ const ButterflyFlow = () => {
         audioRef.current.pause();
         audioRef.current = null;
       }
+      if (typewriterTimerRef.current) {
+        clearTimeout(typewriterTimerRef.current);
+        typewriterTimerRef.current = null;
+      }
+      if (typewriterFallbackTimerRef.current) {
+        clearTimeout(typewriterFallbackTimerRef.current);
+        typewriterFallbackTimerRef.current = null;
+      }
     };
   }, []);
 
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.pause();
+      audioRef.current.src = '';
       audioRef.current = null;
     }
 
     setAudioBlocked(false);
 
-    if (!currentStep?.audio?.src) {
+    const audioConfig = currentStep?.audio;
+
+    if (!audioConfig?.src) {
       setAudioComplete(true);
+      setShowAudioGuidanceHint(false);
       return;
     }
 
-    if (!isAudioEnabled) {
-      setAudioComplete(true);
-      return;
-    }
-
-    setAudioComplete(false);
-    const audioSrc = resolveAssetPath(currentStep.audio.src);
+    const audioSrc = resolveAssetPath(audioConfig.src);
 
     if (!audioSrc) {
       setAudioComplete(true);
+      setShowAudioGuidanceHint(false);
       return;
     }
 
     const audio = new Audio(audioSrc);
-    audio.volume = currentStep.audio.volume ?? 1;
-    audio.loop = currentStep.audio.loop ?? false;
+    audio.preload = 'auto';
+    audio.volume = audioConfig.volume ?? 1;
+    audio.loop = audioConfig.loop ?? false;
+
+    const handleLoadedMetadata = () => {
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
+        setAudioDuration(audio.duration);
+      }
+    };
 
     const handleEnded = () => {
       setAudioComplete(true);
@@ -265,12 +377,15 @@ const ButterflyFlow = () => {
     const handleError = () => {
       setAudioComplete(true);
       setAudioBlocked(true);
+      setShowAudioGuidanceHint(false);
     };
 
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
 
     audioRef.current = audio;
+    audio.load();
 
     const attemptPlay = () => {
       const playPromise = audio.play();
@@ -282,16 +397,26 @@ const ButterflyFlow = () => {
           .catch(() => {
             setAudioBlocked(true);
             setAudioComplete(true);
+            setShowAudioGuidanceHint(false);
           });
       }
     };
 
-    attemptPlay();
+    if (isAudioEnabled) {
+      setAudioComplete(false);
+      audio.currentTime = 0;
+      attemptPlay();
+    } else {
+      setAudioComplete(true);
+      setShowAudioGuidanceHint(false);
+    }
 
     return () => {
       audio.pause();
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
+      audioRef.current = null;
     };
   }, [currentStep, isAudioEnabled]);
 
@@ -302,9 +427,17 @@ const ButterflyFlow = () => {
       return;
     }
 
-    const fullText = currentStep.text ?? '';
-    const speed = currentStep.typewriter?.speed ?? settings?.typewriter?.defaultSpeed ?? 30;
-    const endDelay = currentStep.typewriter?.endDelay ?? settings?.typewriter?.endDelay ?? 400;
+    if (showAudioGuidanceHint && isAudioEnabled && currentStep.audio?.src) {
+      setTypedText('');
+      setTextComplete(true);
+      return;
+    }
+
+    if (!isTypewriterReady) {
+      return;
+    }
+
+    const fullText = typeof currentStep.text === 'string' ? currentStep.text : '';
 
     if (!fullText.length) {
       setTypedText('');
@@ -312,25 +445,54 @@ const ButterflyFlow = () => {
       return;
     }
 
-    setTypedText('');
-    setTextComplete(false);
+    const baseSpeed = currentStep.typewriter?.speed ?? settings?.typewriter?.defaultSpeed ?? 22;
+    const defaultEndDelay = currentStep.typewriter?.endDelay ?? settings?.typewriter?.endDelay ?? 400;
+    const charCount = fullText.length;
+    const canSyncWithAudio = isAudioEnabled && !audioBlocked && audioDuration && audioDuration > 0;
+    const durationMs = canSyncWithAudio ? audioDuration * 1000 : null;
+    const stepSpeed = durationMs ? Math.max(durationMs / Math.max(charCount, 1), 10) : Math.max(baseSpeed, 10);
+    const resolvedEndDelay = durationMs ? Math.min(defaultEndDelay, 250) : defaultEndDelay;
+
+    if (typewriterTimerRef.current) {
+      clearTimeout(typewriterTimerRef.current);
+      typewriterTimerRef.current = null;
+    }
 
     let index = 0;
-    const interval = setInterval(() => {
+    let cancelled = false;
+
+    const typeNext = () => {
+      if (cancelled) {
+        return;
+      }
+
       index += 1;
       setTypedText(fullText.slice(0, index));
-      if (index >= fullText.length) {
-        clearInterval(interval);
-        setTimeout(() => {
-          setTextComplete(true);
-        }, endDelay);
+
+      if (index >= charCount) {
+        typewriterTimerRef.current = setTimeout(() => {
+          if (!cancelled) {
+            setTextComplete(true);
+          }
+        }, resolvedEndDelay);
+        return;
       }
-    }, Math.max(speed, 10));
+
+      typewriterTimerRef.current = setTimeout(typeNext, stepSpeed);
+    };
+
+    setTypedText('');
+    setTextComplete(false);
+    typeNext();
 
     return () => {
-      clearInterval(interval);
+      cancelled = true;
+      if (typewriterTimerRef.current) {
+        clearTimeout(typewriterTimerRef.current);
+        typewriterTimerRef.current = null;
+      }
     };
-  }, [currentStep, settings]);
+  }, [audioBlocked, audioDuration, currentStep, isAudioEnabled, isTypewriterReady, settings, showAudioGuidanceHint]);
 
   useEffect(() => {
     setVideoOverlay(null);
@@ -460,6 +622,20 @@ const ButterflyFlow = () => {
     setIsEpilogue(false);
     setCurrentStepId(nextStepId);
   }, [clearAutoLaunchTimer, clearChoiceTimer, epilogue, stepMap]);
+
+  const handleSecretSequenceDoubleClick = useCallback(() => {
+    if (currentIndex <= 0) {
+      return;
+    }
+
+    const previousStepId = stepOrder[currentIndex - 1];
+
+    if (!previousStepId) {
+      return;
+    }
+
+    goToStep(previousStepId);
+  }, [currentIndex, goToStep, stepOrder]);
 
   const handleChoice = useCallback((choice) => {
     if (!choice) {
@@ -605,24 +781,79 @@ const ButterflyFlow = () => {
   const handleToggleAudio = () => {
     setIsAudioEnabled((prev) => {
       const next = !prev;
-      if (!next) {
+      if (next) {
+        if (currentStep?.audio?.src) {
+          if (typewriterTimerRef.current) {
+            clearTimeout(typewriterTimerRef.current);
+            typewriterTimerRef.current = null;
+          }
+          if (typewriterFallbackTimerRef.current) {
+            clearTimeout(typewriterFallbackTimerRef.current);
+            typewriterFallbackTimerRef.current = null;
+          }
+          setAudioDuration(null);
+          setIsTypewriterReady(false);
+          setTypedText('');
+          setTextComplete(false);
+        }
+        setShowAudioGuidanceHint(false);
+      } else {
         if (audioRef.current) {
           audioRef.current.pause();
           audioRef.current.currentTime = 0;
         }
         setAudioBlocked(false);
         setAudioComplete(true);
+        setShowAudioGuidanceHint(false);
+        if (currentStep?.audio?.src) {
+          if (typewriterTimerRef.current) {
+            clearTimeout(typewriterTimerRef.current);
+            typewriterTimerRef.current = null;
+          }
+          if (typewriterFallbackTimerRef.current) {
+            clearTimeout(typewriterFallbackTimerRef.current);
+            typewriterFallbackTimerRef.current = null;
+          }
+          setAudioDuration(null);
+          setIsTypewriterReady(true);
+          setTypedText('');
+          setTextComplete(false);
+        }
       }
       return next;
     });
   };
 
   const handleRetryAudio = () => {
-    if (!audioRef.current) {
+    const audio = audioRef.current;
+
+    if (!audio) {
       return;
     }
 
-    audioRef.current
+    if (typewriterTimerRef.current) {
+      clearTimeout(typewriterTimerRef.current);
+      typewriterTimerRef.current = null;
+    }
+    if (typewriterFallbackTimerRef.current) {
+      clearTimeout(typewriterFallbackTimerRef.current);
+      typewriterFallbackTimerRef.current = null;
+    }
+
+    if (currentStep?.audio?.src) {
+      setAudioDuration(null);
+      setIsTypewriterReady(false);
+      setTypedText('');
+      setTextComplete(false);
+    }
+
+    setShowAudioGuidanceHint(false);
+
+    audio.currentTime = 0;
+    audio.load();
+    setAudioComplete(false);
+
+    audio
       .play()
       .then(() => {
         setAudioBlocked(false);
@@ -672,6 +903,7 @@ const ButterflyFlow = () => {
       : audioBlocked
         ? 'text-red-400'
         : 'text-white/50';
+  const shouldShowAudioGuidance = showAudioGuidanceHint && isAudioEnabled && Boolean(currentStep?.audio?.src);
   const overlayAutoplay = videoOverlay?.autoplay !== false;
   const overlayShouldMute = videoOverlay?.muted ?? false;
   const overlayControls = videoOverlay?.controls ?? true;
@@ -806,13 +1038,16 @@ const ButterflyFlow = () => {
           <div className="space-y-1 text-left">
             <p className="text-[9px] uppercase tracking-[0.35em] text-white/60 sm:text-[10px]">{chapterTitle}</p>
             {currentStep?.sequence && (
-              <p className="text-[9px] uppercase tracking-[0.35em] text-white/40 sm:text-[10px]">
+              <p
+                className="text-[9px] uppercase tracking-[0.35em] text-white/40 sm:text-[10px] select-none"
+                onDoubleClick={handleSecretSequenceDoubleClick}
+              >
                 Secuencia {currentStep.sequence}
               </p>
             )}
           </div>
           <div className="flex flex-col gap-2 self-end text-right md:flex-row md:items-start md:gap-4 md:self-auto">
-            <div className="flex flex-col items-end gap-2 md:items-end">
+            <div className="flex flex-col items-end gap-2 md:items-end mr-2">
               <motion.button
                 type="button"
                 className={`rounded-full border px-3 py-3 transition-colors duration-200 ${audioButtonClasses}`}
@@ -861,10 +1096,36 @@ const ButterflyFlow = () => {
                 {currentStep.speaker}
               </span>
             )}
-            <p className="text-left text-base leading-relaxed text-white sm:text-lg md:text-2xl">
-              {typedText}
-              {!textComplete && <span className="ml-1 animate-pulse">▮</span>}
-            </p>
+            {shouldShowAudioGuidance ? (
+              <div className="flex h-16 items-center justify-start">
+                <motion.div
+                  className="flex items-center gap-1 text-4xl font-semibold tracking-widest text-white md:text-5xl"
+                  role="status"
+                  aria-live="polite"
+                >
+                  {[0, 1, 2].map((dotIndex) => (
+                    <motion.span
+                      key={dotIndex}
+                      initial={{ opacity: 0.2 }}
+                      animate={{ opacity: [0.2, 1, 0.2] }}
+                      transition={{
+                        duration: 1.2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: dotIndex * 0.25,
+                      }}
+                    >
+                      ·
+                    </motion.span>
+                  ))}
+                </motion.div>
+              </div>
+            ) : (
+              <p className="text-left text-base leading-relaxed text-white sm:text-lg md:text-2xl">
+                {typedText}
+                {!textComplete && <span className="ml-1 animate-pulse">▮</span>}
+              </p>
+            )}
           </motion.div>
         </main>
 
