@@ -5,6 +5,12 @@ import Texturas from '../images/Texturas.png';
 
 const IntroScreen = ({ onStart }) => {
   const [showCta, setShowCta] = useState(false);
+  const logoVideoSrc = useMemo(() => {
+    const baseUrl = (import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+    const normalizedBase = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    const sanitizedPath = 'Elementos Web/Logo animado LOLO.mp4';
+    return `${normalizedBase}${encodeURI(sanitizedPath)}`;
+  }, []);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -82,7 +88,7 @@ const IntroScreen = ({ onStart }) => {
           >
             <video
               className="h-32 w-32 object-cover sm:h-40 sm:w-40"
-              src="/Elementos Web/Logo animado LOLO.mp4"
+              src={logoVideoSrc}
               autoPlay
               loop
               muted

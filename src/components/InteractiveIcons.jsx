@@ -25,6 +25,20 @@ const InteractiveIcons = ({ icons = [], accentColor = '#ffffff' }) => {
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 hidden md:block">
+      <motion.div
+        className="pointer-events-none absolute left-1/2 top-10 w-[min(92%,420px)] -translate-x-1/2 rounded-3xl border border-white/15 bg-black/70 px-6 py-4 text-center text-white shadow-lg backdrop-blur"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: 'easeOut' }}
+        style={{ boxShadow: `0 0 24px ${accentColor}20`, borderColor: `${accentColor}40` }}
+      >
+        <p className="text-[11px] uppercase tracking-[0.35em] text-white/50">Elegí con cuidado</p>
+        <p className="mt-2 text-sm leading-relaxed text-white/80">
+          Toca el símbolo que te llame. Una vez lo despiertes, los demás se disuelven:
+          no hay camino de regreso.
+        </p>
+      </motion.div>
+
       {positionedIcons.map((icon) => {
         const IconComponent = getIconByName(icon.icon);
         return (
