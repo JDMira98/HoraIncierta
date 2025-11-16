@@ -1173,7 +1173,6 @@
           "media": {
             "type": "creditos",
             "autoLaunch": true,
-            "seconds": 0,
             "label": "Créditos finales",
             "continueLabel": "Finalizar recorrido",
             "nextStepId": "credits",

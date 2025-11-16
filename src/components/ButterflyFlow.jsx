@@ -925,7 +925,7 @@ const ButterflyFlow = () => {
     clearChoiceTimer();
     setChoiceTimeLeft(null);
 
-    if (!canRevealChoices || !hasChoices) {
+    if (!canRevealChoices || !hasChoices || videoOverlay) {
       return;
     }
 
@@ -958,7 +958,7 @@ const ButterflyFlow = () => {
     return () => {
       clearChoiceTimer();
     };
-  }, [canRevealChoices, clearChoiceTimer, currentStep, handleChoice, hasChoices, settings]);
+  }, [canRevealChoices, clearChoiceTimer, currentStep, handleChoice, hasChoices, settings, videoOverlay]);
 
   const handleSkip = () => {
     if (!currentStep?.skip) {
@@ -1065,7 +1065,8 @@ const ButterflyFlow = () => {
 
   const accentColor = currentChapter?.theme?.accent ?? '#ffffff';
   const isRadioNovelaChapter = currentChapter?.id === 'capitulo-4';
-  const showRadioNovelaLayout = isRadioNovelaChapter && hasChoices;
+  const shouldShowChoices = canRevealChoices && !videoOverlay;
+  const showRadioNovelaLayout = isRadioNovelaChapter && shouldShowChoices;
   const activeBackground = currentStep?.background ?? {};
   const backgroundMedia = resolveBackgroundMedia(activeBackground);
   const hasBackgroundImage = backgroundMedia?.type === 'image';
@@ -1079,7 +1080,7 @@ const ButterflyFlow = () => {
     ? Math.max(choiceTimeLeft / choiceTimeoutMs, 0)
     : null;
   const isSkipVisible = Boolean(currentStep?.skip) && (!hasChoices || hasIconVideos);
-  const showCountdown = hasChoices && choiceCountdownSeconds !== null;
+  const showCountdown = shouldShowChoices && choiceCountdownSeconds !== null;
   const audioButtonClasses = isAudioEnabled
     ? 'border-white/60 bg-white/15 text-white'
     : 'border-white/20 bg-white/5 text-white/60';
@@ -1434,7 +1435,7 @@ const ButterflyFlow = () => {
           )}
 
           <AnimatePresence>
-            {canRevealChoices && (
+            {shouldShowChoices && (
               showRadioNovelaLayout ? (
                 <motion.div
                   key={`choices-radio-${currentStep.id}`}
