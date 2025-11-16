@@ -496,346 +496,415 @@
         {
           "id": "pasillo-1",
           "sequence": "4.1",
-          "speaker": "Muerte",
-          "text": "A veces soy solo una puerta que nadie supo abrir… A veces, abrir no es avanzar. Es aceptar.",
+          "speaker": "Narrador",
+          "text": "La señal vuelve a encenderse. Antes de cruzar las puertas, la historia pide escuchar.",
           "background": {
             "src": "pasillo.mp4",
             "animation": "zoomIn"
           },
           "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Off Muerte.mp3",
-            "title": "Off Muerte 4.1",
+            "src": "/Elementos Web/RadioNovela/Preludio/PRELUDIO 1.mp3",
+            "title": "Preludio 1",
             "loop": false,
             "autoplay": true
           },
           "choices": [
             {
-              "id": "pasillo-1-continuar",
-              "label": "Seguir escuchando",
+              "id": "pasillo-1-preludio-1-a",
+              "label": "A un hermano que no podrá pasar una última navidad con su hermanito.",
+              "icon": "Puerta 2.png",
               "video360": false,
-              "nextStepId": "pasillo-1-intro"
+              "nextStepId": "pasillo-1-preludio-2"
+            },
+            {
+              "id": "pasillo-1-preludio-1-b",
+              "label": "A una madre que tendrá un puesto vacío en su mesa esta navidad.",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-preludio-2"
             }
           ],
           "skip": {
-            "label": "Ir directo a las puertas",
-            "nextStepId": "pasillo-1-puertas-1"
+            "label": "Saltar preludio",
+            "nextStepId": "pasillo-1-preludio-2"
           }
         },
         {
-          "id": "pasillo-1-intro",
-          "sequence": "4.1·Intro",
+          "id": "pasillo-1-preludio-2",
+          "sequence": "4.1·P2",
           "speaker": "Narrador",
-          "text": "Un murmullo radial despierta la historia. Prestá atención: la radionovela abre el pasillo a otro recuerdo.",
+          "text": "La voz decide a quién llamar antes de alejarse.",
           "background": {
             "src": "pasillo.mp4",
             "animation": "zoomOut"
           },
           "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Intro Radionovela.mp3",
-            "title": "Intro Radionovela",
+            "src": "/Elementos Web/RadioNovela/Preludio/PRELUDIO 2.mp3",
+            "title": "Preludio 2",
             "loop": false,
             "autoplay": true
           },
           "choices": [
             {
-              "id": "pasillo-1-intro-continuar",
-              "label": "Abrir las puertas",
+              "id": "pasillo-1-preludio-2-a",
+              "label": "¿Puedo siquiera despedirme?",
+              "icon": "Puerta 2.png",
               "video360": false,
-              "nextStepId": "pasillo-1-puertas-1"
+              "nextStepId": "pasillo-1-preludio-3"
+            },
+            {
+              "id": "pasillo-1-preludio-2-b",
+              "label": "¿Qué va a pasar con mi familia?",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-preludio-3"
             }
           ],
           "skip": {
-            "label": "Saltar introducción",
-            "nextStepId": "pasillo-1-puertas-1"
+            "label": "Seguir",
+            "nextStepId": "pasillo-1-preludio-3"
           }
         },
         {
-          "id": "pasillo-1-puertas-1",
-          "sequence": "4.1·I",
+          "id": "pasillo-1-preludio-3",
+          "sequence": "4.1·P3",
           "speaker": "Narrador",
-          "text": "Dos puertas palpitan frente a vos. Elegí la que te llame: una vez abierta, el eco decide por vos.",
+          "text": "La transmisión duda entre desafiar o suplicar.",
           "background": {
             "src": "pasillo.mp4",
             "animation": "zoomIn"
           },
-          "audio": null,
-          "interactiveIcons": [
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Preludio/PRELUDIO 3.mp3",
+            "title": "Preludio 3",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
             {
-              "id": "puerta-i-izquierda",
-              "label": "Puerta izquierda",
-              "subtitle": "Susurros que nunca cerraron",
+              "id": "pasillo-1-preludio-3-a",
+              "label": "¿Y por qué no puedo verlos?",
               "icon": "Puerta 2.png",
-              "position": {
-                "x": 38,
-                "y": 58
-              },
-              "nextStepId": "pasillo-1-puerta-i-a"
+              "video360": false,
+              "nextStepId": "pasillo-1-preludio-4"
             },
             {
-              "id": "puerta-i-derecha",
-              "label": "Puerta derecha",
-              "subtitle": "Recuerdos que insisten",
+              "id": "pasillo-1-preludio-3-b",
+              "label": "¿Podrías permitirme verlos una última vez?",
               "icon": "Puerta 2.png",
-              "position": {
-                "x": 62,
-                "y": 58
-              },
-              "nextStepId": "pasillo-1-puerta-i-b"
-            }
-          ],
-          "skip": {
-            "label": "Dejar que el pasillo decida",
-            "nextStepId": "pasillo-1-puerta-i-a"
-          }
-        },
-        {
-          "id": "pasillo-1-puerta-i-a",
-          "sequence": "4.1·I-A",
-          "speaker": "Puerta I",
-          "text": "Audio pendiente de la primera puerta. Aquí vivirá la voz que revele el primer secreto.",
-          "background": {
-            "src": "pasillo.mp4",
-            "animation": "zoomOut"
-          },
-          "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta I.mp3",
-            "title": "Puerta I",
-            "loop": false,
-            "autoplay": true
-          },
-          "choices": [
-            {
-              "id": "pasillo-1-puerta-i-a-continuar",
-              "label": "Seguir explorando",
               "video360": false,
-              "nextStepId": "pasillo-1-puertas-2"
+              "nextStepId": "pasillo-1-preludio-4"
             }
           ],
           "skip": {
-            "label": "Avanzar",
-            "nextStepId": "pasillo-1-puertas-2"
+            "label": "Escuchar el final del preludio",
+            "nextStepId": "pasillo-1-preludio-4"
           }
         },
         {
-          "id": "pasillo-1-puerta-i-b",
-          "sequence": "4.1·I-B",
-          "speaker": "Puerta II",
-          "text": "Audio pendiente de la segunda puerta. Pronto se sumará la escena que la habita.",
-          "background": {
-            "src": "pasillo.mp4",
-            "animation": "zoomOut"
-          },
-          "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta II.mp3",
-            "title": "Puerta II",
-            "loop": false,
-            "autoplay": true
-          },
-          "choices": [
-            {
-              "id": "pasillo-1-puerta-i-b-continuar",
-              "label": "Seguir explorando",
-              "video360": false,
-              "nextStepId": "pasillo-1-puertas-2"
-            }
-          ],
-          "skip": {
-            "label": "Avanzar",
-            "nextStepId": "pasillo-1-puertas-2"
-          }
-        },
-        {
-          "id": "pasillo-1-puertas-2",
-          "sequence": "4.1·II",
+          "id": "pasillo-1-preludio-4",
+          "sequence": "4.1·P4",
           "speaker": "Narrador",
-          "text": "El corredor se abre en tres salidas. Cada puerta destila una historia distinta.",
+          "text": "Un último susurro prepara el dial para la escena principal.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Preludio/PRELUDIO 4.mp3",
+            "title": "Preludio 4",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-preludio-4-continuar",
+              "label": "Abrir la puerta hacia la escena principal",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-1"
+            }
+          ],
+          "skip": {
+            "label": "Ir a la escena",
+            "nextStepId": "pasillo-1-escena-1"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-1",
+          "sequence": "4.1·E1",
+          "speaker": "Narrador",
+          "text": "La primera escena late al ritmo de la consola. Elegí qué tema abre el camino.",
           "background": {
             "src": "pasillo.mp4",
             "animation": "zoomIn"
           },
-          "audio": null,
-          "interactiveIcons": [
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 1/AUDIO 1 (ESCENA 1).mp3",
+            "title": "Escena 1 · Audio 1",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
             {
-              "id": "puerta-ii-izquierda",
-              "label": "Puerta uno",
-              "subtitle": "Un eco familiar",
+              "id": "pasillo-1-escena-1-combo",
+              "label": "Un tema del Combo de las Estrellas",
               "icon": "Puerta 2.png",
-              "position": {
-                "x": 30,
-                "y": 56
-              },
-              "nextStepId": "pasillo-1-puerta-ii-a"
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-1-combo"
             },
             {
-              "id": "puerta-ii-centro",
-              "label": "Puerta central",
-              "subtitle": "Voces entrelazadas",
+              "id": "pasillo-1-escena-1-romero",
+              "label": "Un tema de Gabriel Romero",
               "icon": "Puerta 2.png",
-              "position": {
-                "x": 50,
-                "y": 48
-              },
-              "nextStepId": "pasillo-1-puerta-ii-b"
-            },
-            {
-              "id": "puerta-ii-derecha",
-              "label": "Puerta tres",
-              "subtitle": "Un suspiro que insiste",
-              "icon": "Puerta 2.png",
-              "position": {
-                "x": 70,
-                "y": 56
-              },
-              "nextStepId": "pasillo-1-puerta-ii-c"
-            }
-          ],
-          "skip": {
-            "label": "Que el azar decida",
-            "nextStepId": "pasillo-1-puerta-ii-a"
-          }
-        },
-        {
-          "id": "pasillo-1-puerta-ii-a",
-          "sequence": "4.1·II-A",
-          "speaker": "Puerta III",
-          "text": "Audio pendiente para la primera puerta del segundo tramo.",
-          "background": {
-            "src": "pasillo.mp4",
-            "animation": "zoomOut"
-          },
-          "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta III.mp3",
-            "title": "Puerta III",
-            "loop": false,
-            "autoplay": true
-          },
-          "choices": [
-            {
-              "id": "pasillo-1-puerta-ii-a-continuar",
-              "label": "Continuar",
               "video360": false,
-              "nextStepId": "pasillo-1-puertas-3"
+              "nextStepId": "pasillo-1-escena-1-romero"
             }
           ],
           "skip": {
-            "label": "Avanzar",
-            "nextStepId": "pasillo-1-puertas-3"
+            "label": "Que lo decida el destino",
+            "nextStepId": "pasillo-1-escena-1-combo"
           }
         },
         {
-          "id": "pasillo-1-puerta-ii-b",
-          "sequence": "4.1·II-B",
-          "speaker": "Puerta IV",
-          "text": "Audio pendiente para la puerta central del segundo tramo.",
-          "background": {
-            "src": "pasillo.mp4",
-            "animation": "zoomOut"
-          },
-          "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta IV.mp3",
-            "title": "Puerta IV",
-            "loop": false,
-            "autoplay": true
-          },
-          "choices": [
-            {
-              "id": "pasillo-1-puerta-ii-b-continuar",
-              "label": "Continuar",
-              "video360": false,
-              "nextStepId": "pasillo-1-puertas-3"
-            }
-          ],
-          "skip": {
-            "label": "Avanzar",
-            "nextStepId": "pasillo-1-puertas-3"
-          }
-        },
-        {
-          "id": "pasillo-1-puerta-ii-c",
-          "sequence": "4.1·II-C",
-          "speaker": "Puerta V",
-          "text": "Audio pendiente para la tercera puerta del segundo tramo.",
-          "background": {
-            "src": "pasillo.mp4",
-            "animation": "zoomOut"
-          },
-          "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta V.mp3",
-            "title": "Puerta V",
-            "loop": false,
-            "autoplay": true
-          },
-          "choices": [
-            {
-              "id": "pasillo-1-puerta-ii-c-continuar",
-              "label": "Continuar",
-              "video360": false,
-              "nextStepId": "pasillo-1-puertas-3"
-            }
-          ],
-          "skip": {
-            "label": "Avanzar",
-            "nextStepId": "pasillo-1-puertas-3"
-          }
-        },
-        {
-          "id": "pasillo-1-puertas-3",
-          "sequence": "4.1·III",
+          "id": "pasillo-1-escena-1-combo",
+          "sequence": "4.1·E1-A",
           "speaker": "Narrador",
-          "text": "El eco se reduce y quedan dos últimas puertas. Elegí sabiendo que lo que escuches será definitivo.",
+          "text": "Suena el Combo de las Estrellas para despedir la noche.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 1/(INTERACTIVO 4.1) AUDIO 2 (ESCENA 1).mp3",
+            "title": "Escena 1 · Interactivo 4.1",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-escena-1-combo-continuar",
+              "label": "Seguir por la puerta que sigue latiendo",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-1-int-5"
+            }
+          ],
+          "skip": {
+            "label": "Seguir",
+            "nextStepId": "pasillo-1-escena-1-int-5"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-1-romero",
+          "sequence": "4.1·E1-B",
+          "speaker": "Narrador",
+          "text": "Gabriel Romero ocupa la sala con su tema preferido.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 1/(INTERACTIVO 4.2) AUDIO 3 (ESCENA 1).mp3",
+            "title": "Escena 1 · Interactivo 4.2",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-escena-1-romero-continuar",
+              "label": "Seguir por la puerta que resuena con Romero",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-1-int-5"
+            }
+          ],
+          "skip": {
+            "label": "Seguir",
+            "nextStepId": "pasillo-1-escena-1-int-5"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-1-int-5",
+          "sequence": "4.1·E1-Decisión",
+          "speaker": "Narrador",
+          "text": "Tras la música llega la pregunta decisiva.",
           "background": {
             "src": "pasillo.mp4",
             "animation": "zoomIn"
           },
           "audio": null,
-          "interactiveIcons": [
+          "choices": [
             {
-              "id": "puerta-iii-izquierda",
-              "label": "Puerta penúltima",
-              "subtitle": "Promesas suspendidas",
+              "id": "pasillo-1-escena-1-int-5-si",
+              "label": "Sí",
               "icon": "Puerta 2.png",
-              "position": {
-                "x": 35,
-                "y": 57
-              },
-              "nextStepId": "pasillo-1-puerta-iii-a"
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-2"
             },
             {
-              "id": "puerta-iii-derecha",
-              "label": "Última puerta",
-              "subtitle": "La voz que queda",
+              "id": "pasillo-1-escena-1-int-5-no",
+              "label": "No",
               "icon": "Puerta 2.png",
-              "position": {
-                "x": 65,
-                "y": 57
-              },
-              "nextStepId": "pasillo-1-puerta-iii-b"
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-3"
             }
           ],
           "skip": {
-            "label": "Entregar el final",
-            "nextStepId": "pasillo-1-puerta-iii-a"
+            "label": "Seguir sin responder",
+            "nextStepId": "pasillo-1-escena-3"
           }
         },
         {
-          "id": "pasillo-1-puerta-iii-a",
-          "sequence": "4.1·III-A",
-          "speaker": "Puerta VI",
-          "text": "Audio pendiente para la penúltima puerta.",
+          "id": "pasillo-1-escena-2",
+          "sequence": "4.1·E2",
+          "speaker": "Narrador",
+          "text": "Si aceptaste, contá qué recuerdo querés dejar.",
           "background": {
             "src": "pasillo.mp4",
             "animation": "zoomOut"
           },
           "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta VI.mp3",
-            "title": "Puerta VI",
+            "src": "/Elementos Web/RadioNovela/Escena 2/AUDIO 1 (ESCENA 2).mp3",
+            "title": "Escena 2 · Audio 1",
             "loop": false,
             "autoplay": true
           },
           "choices": [
             {
-              "id": "pasillo-1-puerta-iii-a-continuar",
-              "label": "Cerrar la transmisión",
+              "id": "pasillo-1-escena-2-recuerdo-bueno",
+              "label": "Contar un buen recuerdo",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-2-bueno"
+            },
+            {
+              "id": "pasillo-1-escena-2-recuerdo-triste",
+              "label": "Contar un recuerdo triste",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-2-triste"
+            }
+          ],
+          "skip": {
+            "label": "Ir a la siguiente escena",
+            "nextStepId": "pasillo-1-escena-3"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-2-bueno",
+          "sequence": "4.1·E2-A",
+          "speaker": "Narrador",
+          "text": "El buen recuerdo se mezcla con la señal.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 2/(INTERACTIVO 6.1) AUDIO 2 (ESCENA 2).mp3",
+            "title": "Escena 2 · Interactivo 6.1",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-escena-2-bueno-continuar",
+              "label": "Cruzar la puerta hacia la siguiente escena",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-3"
+            }
+          ],
+          "skip": {
+            "label": "Seguir",
+            "nextStepId": "pasillo-1-escena-3"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-2-triste",
+          "sequence": "4.1·E2-B",
+          "speaker": "Narrador",
+          "text": "El recuerdo triste se confiesa a través del dial.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 2/(INTERACTIVO 6.2) AUDIO 3 (ESCENA 2).mp3",
+            "title": "Escena 2 · Interactivo 6.2",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-escena-2-triste-continuar",
+              "label": "Seguir por la puerta que queda en penumbra",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-3"
+            }
+          ],
+          "skip": {
+            "label": "Seguir",
+            "nextStepId": "pasillo-1-escena-3"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-3",
+          "sequence": "4.1·E3",
+          "speaker": "Narrador",
+          "text": "La última escena decide si la celebración continúa.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomOut"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 3/AUDIO 1 (ESCENA 3).mp3",
+            "title": "Escena 3 · Audio 1",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-escena-3-ir",
+              "label": "Ir a la celebración",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-3-ir"
+            },
+            {
+              "id": "pasillo-1-escena-3-no-ir",
+              "label": "No ir a la celebración",
+              "icon": "Puerta 2.png",
+              "video360": false,
+              "nextStepId": "pasillo-1-escena-3-no-ir"
+            }
+          ],
+          "skip": {
+            "label": "Terminar",
+            "nextStepId": "pasillo-1-cierre"
+          }
+        },
+        {
+          "id": "pasillo-1-escena-3-ir",
+          "sequence": "4.1·E3-A",
+          "speaker": "Narrador",
+          "text": "La decisión de ir ilumina el túnel con celebración.",
+          "background": {
+            "src": "pasillo.mp4",
+            "animation": "zoomIn"
+          },
+          "audio": {
+            "src": "/Elementos Web/RadioNovela/Escena 3/(INTERACTIVO 7.1) AUDIO 2 (ESCENA 3).mp3",
+            "title": "Escena 3 · Interactivo 7.1",
+            "loop": false,
+            "autoplay": true
+          },
+          "choices": [
+            {
+              "id": "pasillo-1-escena-3-ir-continuar",
+              "label": "Atravesar la última puerta en celebración",
+              "icon": "Puerta 2.png",
               "video360": false,
               "nextStepId": "pasillo-1-cierre"
             }
@@ -846,24 +915,25 @@
           }
         },
         {
-          "id": "pasillo-1-puerta-iii-b",
-          "sequence": "4.1·III-B",
-          "speaker": "Puerta VII",
-          "text": "Audio pendiente para la última puerta del tramo.",
+          "id": "pasillo-1-escena-3-no-ir",
+          "sequence": "4.1·E3-B",
+          "speaker": "Narrador",
+          "text": "La decisión de no ir deja la celebración en silencio.",
           "background": {
             "src": "pasillo.mp4",
-            "animation": "zoomOut"
+            "animation": "zoomIn"
           },
           "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Puerta VII.mp3",
-            "title": "Puerta VII",
+            "src": "/Elementos Web/RadioNovela/Escena 3/(INTERACTIVO 7.2) AUDIO 3 (ESCENA 3).mp3",
+            "title": "Escena 3 · Interactivo 7.2",
             "loop": false,
             "autoplay": true
           },
           "choices": [
             {
-              "id": "pasillo-1-puerta-iii-b-continuar",
-              "label": "Cerrar la transmisión",
+              "id": "pasillo-1-escena-3-no-ir-continuar",
+              "label": "Atravesar la última puerta en silencio",
+              "icon": "Puerta 2.png",
               "video360": false,
               "nextStepId": "pasillo-1-cierre"
             }
@@ -880,10 +950,10 @@
           "text": "El corredor vuelve a quedar en silencio. La radionovela apaga su dial para que sigas el camino.",
           "background": {
             "src": "pasillo.mp4",
-            "animation": "zoomIn"
+            "animation": "zoomOut"
           },
           "audio": {
-            "src": "/audio/Capítulo 4/(4.1) Cierre Radionovela.mp3",
+            "src": "/audio/Capítulo 4/RadioNovela/(Audio) Preludio Cierre.mp3",
             "title": "Cierre Radionovela",
             "loop": false,
             "autoplay": true
@@ -891,7 +961,8 @@
           "choices": [
             {
               "id": "pasillo-1-cierre-continuar",
-              "label": "Seguir adelante",
+              "label": "Abrir la siguiente puerta del pasillo",
+              "icon": "puerta 2.png",
               "video360": false,
               "nextStepId": "pasillo-2"
             }
@@ -956,8 +1027,8 @@
         {
           "id": "jardin-1",
           "sequence": "5.1",
-          "speaker": "—",
-          "text": "Transición al jardín. Se habilita el ícono Jazmín para comenzar el videoclip.",
+          "speaker": "",
+          "text": "",
           "background": {
             "src": "Jardín.mp4",
             "animation": "zoomIn"
@@ -965,25 +1036,16 @@
           "audio": null,
           "media": {
             "type": "videoclip",
-            "video360": false
-          },
-          "choices": [
-            {
-              "id": "jardin-1-a",
-              "label": "Escuchar el jazmín",
-              "video360": false,
-              "nextStepId": "tunel-1"
-            },
-            {
-              "id": "jardin-1-b",
-              "label": "Seguir sin mirar atrás",
-              "video360": false,
-              "nextStepId": "tunel-1"
+            "autoLaunch": true,
+            "seconds": 5,
+            "label": "Videoclip final",
+            "continueLabel": "Seguir al túnel",
+            "nextStepId": "tunel-1",
+            "video360": {
+              "type": "youtube",
+              "id": "_SZLw8gmzRg",
+              "title": "Cierre · Hora Incierta"
             }
-          ],
-          "skip": {
-            "label": "Omitir",
-            "nextStepId": "tunel-1"
           }
         }
       ]
@@ -1099,47 +1161,8 @@
           ]
         },
         {
-          "id": "tunel-4",
-          "sequence": "6.4",
-          "speaker": "—",
-          "text": "",
-          "background": {
-            "src": "Tunel_Final.mp4",
-            "animation": "fade"
-          },
-          "audio": null,
-          "media": {
-            "type": "tributo",
-            "autoLaunch": true,
-            "seconds": 0,
-            "label": "Video final",
-            "continueLabel": "Ver créditos",
-            "nextStepId": "tunel-5",
-            "video360": {
-              "type": "youtube",
-              "id": "_SZLw8gmzRg",
-              "title": "Cierre · Hora Incierta",
-              "params": {
-                "list": "RD_SZLw8gmzRg"
-              }
-            }
-          },
-          "choices": [
-            {
-              "id": "tunel-4-continue",
-              "label": "Continuar",
-              "video360": false,
-              "nextStepId": "tunel-5"
-            }
-          ],
-          "skip": {
-            "label": "Saltar video",
-            "nextStepId": "tunel-5"
-          }
-        },
-        {
           "id": "tunel-5",
-          "sequence": "6.5",
+          "sequence": "6.4",
           "speaker": "—",
           "text": "",
           "background": {
@@ -1156,7 +1179,7 @@
             "nextStepId": "credits",
             "video360": {
               "type": "youtube",
-              "id": "5FCrtlkCPsc",
+              "id": "ynj5d0h7rhs",
               "title": "Créditos · Hora Incierta"
             }
           },

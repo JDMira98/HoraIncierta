@@ -218,6 +218,7 @@ const ButterflyFlow = () => {
   const typewriterFallbackTimerRef = useRef(null);
   const hasTriggeredAutoMediaRef = useRef(false);
   const autoLaunchTimerRef = useRef(null);
+  const autoAdvanceTimerRef = useRef(null);
 
   const stopAmbientAudio = useCallback(() => {
     if (ambientAudioRef.current) {
@@ -242,6 +243,17 @@ const ButterflyFlow = () => {
       autoLaunchTimerRef.current = null;
     }
   }, []);
+
+  const clearAutoAdvanceTimer = useCallback(() => {
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => () => {
+    clearAutoAdvanceTimer();
+  }, [clearAutoAdvanceTimer]);
 
   const currentStep = currentStepId ? stepMap.get(currentStepId) : null;
   const currentChapter = currentStepId ? chapterByStep.get(currentStepId) : null;
@@ -585,7 +597,8 @@ const ButterflyFlow = () => {
     setActiveChoice(null);
     hasTriggeredAutoMediaRef.current = false;
     clearAutoLaunchTimer();
-  }, [clearAutoLaunchTimer, currentStepId]);
+    clearAutoAdvanceTimer();
+  }, [clearAutoAdvanceTimer, clearAutoLaunchTimer, currentStepId]);
 
   useEffect(() => {
     if (!isSequenceMenuOpen) {
@@ -712,6 +725,7 @@ const ButterflyFlow = () => {
   const goToStep = useCallback((nextStepId) => {
     clearChoiceTimer();
     clearAutoLaunchTimer();
+    clearAutoAdvanceTimer();
 
     if (!nextStepId) {
       return;
@@ -735,7 +749,64 @@ const ButterflyFlow = () => {
 
     setIsEpilogue(false);
     setCurrentStepId(nextStepId);
-  }, [clearAutoLaunchTimer, clearChoiceTimer, epilogue, stepMap]);
+  }, [clearAutoAdvanceTimer, clearAutoLaunchTimer, clearChoiceTimer, epilogue, stepMap]);
+
+  useEffect(() => {
+    clearAutoAdvanceTimer();
+
+    if (!currentStep) {
+      return undefined;
+    }
+
+    if (videoOverlay) {
+      return undefined;
+    }
+
+    const rawSeconds = Number(currentStep.seconds ?? currentStep.autoAdvanceSeconds ?? null);
+    const hasValidSeconds = Number.isFinite(rawSeconds) && rawSeconds > 0;
+
+    if (!hasValidSeconds) {
+      return undefined;
+    }
+
+    const stepHasChoices = Array.isArray(currentStep.choices) && currentStep.choices.length > 0;
+    const stepHasIconVideos = Array.isArray(currentStep.interactiveIcons) && currentStep.interactiveIcons.length > 0;
+
+    if (stepHasChoices || stepHasIconVideos) {
+      return undefined;
+    }
+
+    if (currentStep.media?.autoLaunch) {
+      return undefined;
+    }
+
+    const sequentialNextStepId = stepOrder[currentIndex + 1] ?? null;
+    const nextStepId = [
+      currentStep.autoNextStepId,
+      currentStep.media?.nextStepId,
+      currentStep.skip?.nextStepId,
+      sequentialNextStepId,
+      epilogue?.id,
+    ].find((candidate) => candidate && candidate !== currentStep.id);
+
+    if (!nextStepId) {
+      return undefined;
+    }
+
+    if (typeof window === 'undefined') {
+      goToStep(nextStepId);
+      return undefined;
+    }
+
+    autoAdvanceTimerRef.current = window.setTimeout(() => {
+      autoAdvanceTimerRef.current = null;
+      goToStep(nextStepId);
+    }, rawSeconds * 1000);
+
+    return () => {
+      clearAutoAdvanceTimer();
+    };
+  }, [clearAutoAdvanceTimer, currentIndex, currentStep, epilogue, goToStep, stepOrder, videoOverlay]);
 
   const handleSelectStep = useCallback((stepId) => {
     setIsSequenceMenuOpen(false);
@@ -766,6 +837,7 @@ const ButterflyFlow = () => {
 
     clearChoiceTimer();
     clearAutoLaunchTimer();
+    clearAutoAdvanceTimer();
 
     const videoConfig = resolveVideoConfig(choice, settings);
 
@@ -800,7 +872,7 @@ const ButterflyFlow = () => {
     }
 
     goToStep(choice.nextStepId);
-  }, [clearAutoLaunchTimer, clearChoiceTimer, goToStep, settings]);
+  }, [clearAutoAdvanceTimer, clearAutoLaunchTimer, clearChoiceTimer, goToStep, settings]);
 
   const handleIconVideo = useCallback((iconOption) => {
     if (!iconOption) {
@@ -809,6 +881,7 @@ const ButterflyFlow = () => {
 
     clearChoiceTimer();
     clearAutoLaunchTimer();
+    clearAutoAdvanceTimer();
 
     if (audioRef.current) {
       audioRef.current.pause();
@@ -846,7 +919,7 @@ const ButterflyFlow = () => {
       controls: iconOption.controls ?? videoConfig.controls,
       params: iconOption.params ?? videoConfig.params,
     });
-  }, [clearAutoLaunchTimer, clearChoiceTimer, currentStep, goToStep, settings]);
+  }, [clearAutoAdvanceTimer, clearAutoLaunchTimer, clearChoiceTimer, currentStep, goToStep, settings]);
 
   useEffect(() => {
     clearChoiceTimer();
@@ -896,6 +969,8 @@ const ButterflyFlow = () => {
 
   const handleRestart = () => {
     clearChoiceTimer();
+    clearAutoLaunchTimer();
+    clearAutoAdvanceTimer();
     setIsEpilogue(false);
     setCurrentStepId(meta?.startStepId ?? stepOrder[0] ?? null);
   };
@@ -989,6 +1064,8 @@ const ButterflyFlow = () => {
 
 
   const accentColor = currentChapter?.theme?.accent ?? '#ffffff';
+  const isRadioNovelaChapter = currentChapter?.id === 'capitulo-4';
+  const showRadioNovelaLayout = isRadioNovelaChapter && hasChoices;
   const activeBackground = currentStep?.background ?? {};
   const backgroundMedia = resolveBackgroundMedia(activeBackground);
   const hasBackgroundImage = backgroundMedia?.type === 'image';
@@ -1358,30 +1435,108 @@ const ButterflyFlow = () => {
 
           <AnimatePresence>
             {canRevealChoices && (
-              <motion.div
-                key={`choices-${currentStep.id}`}
-                className="flex w-full flex-col items-center justify-center gap-3 sm:gap-4 md:flex-row"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 16 }}
-              >
-                {currentStep.choices.map((choice, idx) => (
-                  <motion.button
-                    key={choice.id}
-                    custom={idx}
-                    variants={choiceVariants}
-                    initial="hidden"
-                    animate="visible"
-                    className="w-full max-w-sm rounded-full border-2 border-white/25 bg-white/5 px-6 py-3 sm:py-4 text-sm uppercase tracking-[0.3em] text-white/90 transition hover:border-white/60 hover:bg-white/15 touch-manipulation"
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.96 }}
-                    style={{ borderColor: accentColor ?? '#ffffff' }}
-                    onClick={() => handleChoice(choice)}
-                  >
-                    {choice.label}
-                  </motion.button>
-                ))}
-              </motion.div>
+              showRadioNovelaLayout ? (
+                <motion.div
+                  key={`choices-radio-${currentStep.id}`}
+                  className="grid w-full max-w-4xl gap-3 sm:grid-cols-2"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 16 }}
+                >
+                  {currentStep.choices.map((choice, idx) => {
+                    const choiceIconAsset = resolveAssetPath(choice.icon ?? null, {
+                      fallbackDir: ICONOS_BASE_PATH,
+                    });
+
+                    return (
+                      <motion.button
+                        key={choice.id}
+                        type="button"
+                        custom={idx}
+                        variants={choiceVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="group relative flex w-full items-center gap-4 rounded-3xl border border-white/18 bg-white/6 p-4 text-left text-white shadow-[0_14px_36px_rgba(0,0,0,0.45)] backdrop-blur-md transition hover:border-white/45 hover:bg-white/12 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.96 }}
+                        style={{ borderColor: `${accentColor}55`, boxShadow: `0 0 26px ${accentColor}26` }}
+                        onClick={() => handleChoice(choice)}
+                      >
+                        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-white/20 bg-black/50 shadow-inner sm:h-20 sm:w-20">
+                          {choiceIconAsset ? (
+                            <img
+                              src={choiceIconAsset}
+                              alt={choice.label ?? 'Puerta'}
+                              className="h-full w-full object-contain"
+                              draggable={false}
+                            />
+                          ) : (
+                            <span className="flex h-full w-full items-center justify-center text-[10px] uppercase tracking-[0.35em] text-white/70">
+                              Puerta
+                            </span>
+                          )}
+                          <motion.div
+                            className="pointer-events-none absolute inset-0 rounded-2xl border border-white/25"
+                            initial={{ opacity: 0.25, scale: 0.94 }}
+                            animate={{ opacity: [0.25, 0.55, 0.25], scale: [0.94, 1.02, 0.94] }}
+                            transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut', delay: idx * 0.12 }}
+                            style={{ boxShadow: `0 0 24px ${accentColor}33` }}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1 pr-2">
+                          <span className="text-[9px] uppercase tracking-[0.32em] text-white/55 sm:text-[10px]">
+                            Selecciona la puerta
+                          </span>
+                          <span className="text-sm leading-relaxed text-white/90 sm:text-base">
+                            {choice.label}
+                          </span>
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={`choices-${currentStep.id}`}
+                  className="flex w-full flex-col items-center justify-center gap-3 sm:gap-4 md:flex-row"
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 16 }}
+                >
+                  {currentStep.choices.map((choice, idx) => {
+                    const choiceIconAsset = resolveAssetPath(choice.icon ?? null, {
+                      fallbackDir: ICONOS_BASE_PATH,
+                    });
+
+                    return (
+                      <motion.button
+                        key={choice.id}
+                        custom={idx}
+                        variants={choiceVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="w-full max-w-sm rounded-full border-2 border-white/25 bg-white/5 px-6 py-3 sm:py-4 text-sm uppercase tracking-[0.25em] text-white/90 transition hover:border-white/60 hover:bg-white/15 touch-manipulation"
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.96 }}
+                        style={{ borderColor: accentColor ?? '#ffffff' }}
+                        onClick={() => handleChoice(choice)}
+                      >
+                        <span className="flex items-center justify-center gap-3">
+                          {choiceIconAsset && (
+                            <img
+                              src={choiceIconAsset}
+                              alt={choice.label ?? 'Opción'}
+                              className="h-8 w-8 shrink-0 object-contain"
+                              draggable={false}
+                            />
+                          )}
+                          <span>{choice.label}</span>
+                        </span>
+                      </motion.button>
+                    );
+                  })}
+                </motion.div>
+              )
             )}
           </AnimatePresence>
 
