@@ -508,6 +508,10 @@
             "loop": false,
             "autoplay": true
           },
+          "skip": {
+            "label": "Omitir",
+            "nextStepId": "jardin-1"
+          },
           "choices": [
             {
               "id": "pasillo-1-preludio-1-a",
@@ -523,11 +527,8 @@
               "video360": false,
               "nextStepId": "pasillo-1-preludio-2"
             }
-          ],
-          "skip": {
-            "label": "Saltar preludio",
-            "nextStepId": "pasillo-1-preludio-2"
-          }
+          ]
+          
         },
         {
           "id": "pasillo-1-preludio-2",
@@ -1037,7 +1038,7 @@
           "media": {
             "type": "videoclip",
             "autoLaunch": true,
-            "seconds": 5,
+            "seconds": 10,
             "label": "Videoclip final",
             "continueLabel": "Seguir al túnel",
             "nextStepId": "tunel-1",
@@ -1145,20 +1146,8 @@
             "loop": false,
             "autoplay": true
           },
-          "choices": [
-            {
-              "id": "tunel-3-a",
-              "label": "Ver créditos",
-              "video360": false,
-              "nextStepId": "tunel-4"
-            },
-            {
-              "id": "tunel-3-b",
-              "label": "Escuchar eco final",
-              "video360": false,
-              "nextStepId": "tunel-4"
-            }
-          ]
+          "autoAdvanceSeconds": 5,
+          "autoNextStepId": "tunel-5"
         },
         {
           "id": "tunel-5",

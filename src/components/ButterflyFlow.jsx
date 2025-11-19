@@ -769,6 +769,10 @@ const ButterflyFlow = () => {
       return undefined;
     }
 
+    if (currentStep.audio?.src && !audioComplete) {
+      return undefined;
+    }
+
     const stepHasChoices = Array.isArray(currentStep.choices) && currentStep.choices.length > 0;
     const stepHasIconVideos = Array.isArray(currentStep.interactiveIcons) && currentStep.interactiveIcons.length > 0;
 
@@ -806,7 +810,7 @@ const ButterflyFlow = () => {
     return () => {
       clearAutoAdvanceTimer();
     };
-  }, [clearAutoAdvanceTimer, currentIndex, currentStep, epilogue, goToStep, stepOrder, videoOverlay]);
+  }, [audioComplete, clearAutoAdvanceTimer, currentIndex, currentStep, epilogue, goToStep, stepOrder, videoOverlay]);
 
   const handleSelectStep = useCallback((stepId) => {
     setIsSequenceMenuOpen(false);
@@ -1065,6 +1069,8 @@ const ButterflyFlow = () => {
 
   const accentColor = currentChapter?.theme?.accent ?? '#ffffff';
   const isRadioNovelaChapter = currentChapter?.id === 'capitulo-4';
+  const isRadioNovelaPreludio = isRadioNovelaChapter && currentStep?.id?.startsWith('pasillo-1-preludio');
+  const shouldForceSkipVisible = currentStep?.id === 'pasillo-1';
   const shouldShowChoices = canRevealChoices && !videoOverlay;
   const showRadioNovelaLayout = isRadioNovelaChapter && shouldShowChoices;
   const activeBackground = currentStep?.background ?? {};
@@ -1079,7 +1085,8 @@ const ButterflyFlow = () => {
   const choiceProgress = choiceTimeLeft !== null && choiceTimeoutMs > 0
     ? Math.max(choiceTimeLeft / choiceTimeoutMs, 0)
     : null;
-  const isSkipVisible = Boolean(currentStep?.skip) && (!hasChoices || hasIconVideos);
+  const isSkipVisible = Boolean(currentStep?.skip)
+    && ((!hasChoices || hasIconVideos) || isRadioNovelaPreludio || shouldForceSkipVisible);
   const showCountdown = shouldShowChoices && choiceCountdownSeconds !== null;
   const audioButtonClasses = isAudioEnabled
     ? 'border-white/60 bg-white/15 text-white'
