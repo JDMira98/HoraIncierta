@@ -96,10 +96,6 @@ const IntroScreen = ({ onStart }) => {
               aria-label="Logo animado de LOLO"
             />
           </motion.div>
-
-          <p className="max-w-md text-sm uppercase tracking-[0.35em] text-white/50">
-            Logo vivo. Pulso de la experiencia
-          </p>
         </motion.div>
 
         <motion.div
