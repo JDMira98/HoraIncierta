@@ -1252,7 +1252,7 @@ const ButterflyFlow = () => {
                 Secuencia {currentStep.sequence}
               </p>
             )}
-            <motion.button
+            {/* <motion.button
               type="button"
               className="pointer-events-auto mt-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-[9px] uppercase tracking-[0.3em] text-white/80 transition hover:border-white/55 hover:bg-white/15 hover:text-white"
               whileHover={{ scale: 1.05 }}
@@ -1262,7 +1262,7 @@ const ButterflyFlow = () => {
               style={{ borderColor: accentColor, opacity: videoOverlay ? 0.5 : 1 }}
             >
               <span>Mapa de secuencias</span>
-            </motion.button>
+            </motion.button> */}
           </div>
           <div className="flex flex-col gap-2 self-end text-right md:flex-row md:items-start md:gap-4 md:self-auto">
             <div className="flex flex-col items-end gap-2 md:items-end mr-2">
